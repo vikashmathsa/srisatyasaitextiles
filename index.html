@@ -41,6 +41,8 @@
       </div>
 
       <div class="header-actions">
+        <button class="theme-toggle" id="themeToggle" title="Toggle Dark/Light Mode" onclick="toggleTheme()">🌙</button>
+
         <div class="action-btn" id="wishlistBtn" onclick="toggleWishlistModal()" title="Wishlist">
           <span class="action-icon">🤍</span>
           <span class="action-count" id="wishlist-count" style="display:none">0</span>
@@ -320,6 +322,35 @@
       <p>© 2026 Sri Satya Sai Textiles. All Rights Reserved. | Made with ❤️ in Srikakulam</p>
     </div>
   </footer>
+<script>
+// ========================
+// Dark / Light Mode Toggle
+// ========================
+function applyTheme(dark) {
+  if (dark) {
+    document.body.classList.add('dark-mode');
+    document.getElementById('themeToggle').textContent = '☀️';
+    document.getElementById('themeToggle').title = 'Switch to Light Mode';
+  } else {
+    document.body.classList.remove('dark-mode');
+    document.getElementById('themeToggle').textContent = '🌙';
+    document.getElementById('themeToggle').title = 'Switch to Dark Mode';
+  }
+}
+
+function toggleTheme() {
+  const isDark = document.body.classList.contains('dark-mode');
+  localStorage.setItem('sstTheme', isDark ? 'light' : 'dark');
+  applyTheme(!isDark);
+}
+
+// Apply saved preference immediately on load
+(function() {
+  const saved = localStorage.getItem('sstTheme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  applyTheme(saved === 'dark' || (!saved && prefersDark));
+})();
+</script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
