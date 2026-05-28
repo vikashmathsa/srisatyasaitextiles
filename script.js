@@ -662,8 +662,8 @@ function placeOrder() {
   const subtotal    = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const shipping    = subtotal >= 999 ? 0 : 49;
   const total       = subtotal + shipping;
-  const paymentMode = document.querySelector('input[name=payment]:checked').value === 'cod'
-                      ? 'Cash on Delivery' : 'UPI / Online Payment';
+  const isUPI       = document.querySelector('input[name=payment]:checked').value === 'upi';
+  const paymentMode = isUPI ? 'UPI / Online Payment' : 'Cash on Delivery';
   const orderId     = "SST" + Date.now().toString().slice(-6);
   const itemsList   = cart.map(i => `${i.name}${i.size ? ` (${i.size})` : ''} x${i.quantity} — ₹${(i.price * i.quantity).toLocaleString()}`).join("\n");
 
@@ -703,11 +703,29 @@ function placeOrder() {
   }).then(() => console.log("✅ Email sent"))
     .catch(err => console.error("EmailJS error:", err));
 
-  // ── Clear cart & show success ──
+  // ── Clear cart ──
   closeCheckout();
   cart = [];
   updateCartCount();
   renderProducts();
+
+  // ── UPI: redirect to payment page ──
+  if (isUPI) {
+    const payParams = new URLSearchParams({
+      orderId,
+      total,
+      name,
+      phone,
+      address,
+      city,
+      pin,
+      items: encodeURIComponent(JSON.stringify(
+        orderData.items
+      ))
+    });
+    window.location.href = `payment.html?${payParams.toString()}`;
+    return; // skip the success overlay below
+  }
 
   const msg = document.createElement('div');
   msg.id = 'orderSuccessOverlay';
