@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sri Satya Sai Textiles</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Ccircle cx='40' cy='40' r='40' fill='%230f172a'/%3E%3Ccircle cx='40' cy='40' r='35' fill='none' stroke='%23f0b429' stroke-width='2'/%3E%3Ccircle cx='40' cy='40' r='31' fill='none' stroke='%23f0b429' stroke-width='0.6' stroke-dasharray='3 2'/%3E%3Ctext x='40' y='51' text-anchor='middle' font-family='Georgia%2Cserif' font-weight='700' font-size='28' fill='%23f0b429'%3EMDK%3C%2Ftext%3E%3C%2Fsvg%3E">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script>emailjs.init("-utj1nwypuNy-Mbow");</script>
+</head>
+<body>
+
+  <div class="top-bar">
+    <div class="top-bar-inner">
+      <span>🚚 Free Shipping on Orders Above ₹999</span>
+      <span>|</span>
+      <span>💳 COD Available</span>
+      <span>|</span>
+      <span>⚡ Fast Delivery Across AP & Telangana</span>
+    </div>
+  </div>
+
+  <header id="mainHeader">
+    <div class="main-header">
+      <div class="logo">
+        <img src="shop_logo.jpg" alt="Sri Satya Sai Textiles Logo" class="logo-img">
+        <div>
+          <div class="logo-name">Sri Satya Sai</div>
+          <div class="logo-sub">TEXTILES</div>
+        </div>
+      </div>
+
+      <div class="search-bar">
+        <span class="search-icon">🔍</span>
+        <input type="text" placeholder="Search shirts, kurtis, sarees, bedsheets..." id="searchInput">
+        <button class="search-clear" id="searchClear" onclick="clearSearch()">✕</button>
+      </div>
+
+      <div class="header-actions">
+        <div class="action-btn" id="wishlistBtn" onclick="toggleWishlistModal()" title="Wishlist">
+          <span class="action-icon">🤍</span>
+          <span class="action-count" id="wishlist-count" style="display:none">0</span>
+          <span class="action-label">Wishlist</span>
+        </div>
+
+        <div class="action-btn" id="userProfile" onclick="toggleAuthModal()" title="Account">
+          <span class="action-icon">👤</span>
+          <span class="action-label" id="userName">Sign In</span>
+        </div>
+
+        <div class="action-btn" id="cart-icon" onclick="openCart()" title="Cart">
+          <span class="action-icon">🛒</span>
+          <span class="action-count" id="cart-count">0</span>
+          <span class="action-label">Cart</span>
+        </div>
+      </div>
+    </div>
+
+    <nav class="categories" id="categories"></nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-slides" id="heroSlides">
+      <div class="hero-slide active" style="background-image: linear-gradient(135deg, rgba(15,23,42,0.75) 0%, rgba(30,64,175,0.6) 100%), url('Main_background.jpg')">
+        <div class="hero-content">
+          <div class="hero-badge">🔥 Summer Sale 2026</div>
+          <h1>Premium Textiles<br><span>at Best Prices</span></h1>
+          <p>Up to <strong>60% OFF</strong> on Exclusive Collections</p>
+          <div class="hero-btns">
+            <button class="btn-primary" onclick="scrollToProducts()">Shop Now</button>
+            <button class="btn-secondary" onclick="filterCategory('Women')">Women's Collection</button>
+          </div>
+        </div>
+      </div>
+      <div class="hero-slide" style="background-image: linear-gradient(135deg, rgba(15,23,42,0.75) 0%, rgba(124,45,18,0.6) 100%), url('Main_background.jpg')">
+        <div class="hero-content">
+          <div class="hero-badge">✨ New Arrivals</div>
+          <h1>Traditional<br><span>Wear Collection</span></h1>
+          <p>Sarees, Kurtis & More — Starting ₹499</p>
+          <div class="hero-btns">
+            <button class="btn-primary" onclick="filterCategory('Women')">Explore</button>
+            <button class="btn-secondary" onclick="filterCategory('Kids')">Kids Collection</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-dots" id="heroDots"></div>
+    <button class="hero-nav prev" onclick="changeSlide(-1)">‹</button>
+    <button class="hero-nav next" onclick="changeSlide(1)">›</button>
+  </section>
+
+  <!-- Category Cards -->
+  <section class="category-cards-section">
+    <div class="category-cards">
+      <div class="cat-card" onclick="filterCategory('Men')">
+        <div class="cat-emoji">👔</div>
+        <div class="cat-name">Men's</div>
+        <div class="cat-count">15 Products</div>
+      </div>
+      <div class="cat-card" onclick="filterCategory('Women')">
+        <div class="cat-emoji">👗</div>
+        <div class="cat-name">Women's</div>
+        <div class="cat-count">15 Products</div>
+      </div>
+      <div class="cat-card" onclick="filterCategory('Kids')">
+        <div class="cat-emoji">🧒</div>
+        <div class="cat-name">Kids</div>
+        <div class="cat-count">10 Products</div>
+      </div>
+      <div class="cat-card" onclick="filterCategory('Home')">
+        <div class="cat-emoji">🏠</div>
+        <div class="cat-name">Home</div>
+        <div class="cat-count">12 Products</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust Badges -->
+  <div class="trust-strip">
+    <div class="trust-item"><span>✅</span> 100% Original Products</div>
+    <div class="trust-item"><span>🔄</span> Easy 7-Day Returns</div>
+    <div class="trust-item"><span>🔒</span> Secure Payments</div>
+    <div class="trust-item"><span>🚚</span> Fast Delivery</div>
+  </div>
+
+  <!-- Products Section -->
+  <section class="section" id="productsSection">
+    <div class="section-header">
+      <h2 class="section-title" id="sectionTitle">All Products</h2>
+      <div class="sort-bar">
+        <select id="sortSelect" onchange="sortProducts()">
+          <option value="default">Sort By</option>
+          <option value="price-low">Price: Low to High</option>
+          <option value="price-high">Price: High to Low</option>
+          <option value="discount">Best Discount</option>
+        </select>
+      </div>
+    </div>
+    <div class="products" id="products"></div>
+    <div class="no-results" id="noResults" style="display:none">
+      <div class="no-results-icon">🔍</div>
+      <h3>No products found</h3>
+      <p>Try a different search or category</p>
+      <button onclick="clearSearch(); filterCategory('All')">Show All Products</button>
+    </div>
+  </section>
+
+  <!-- Auth Modal -->
+  <div class="modal-overlay" id="authModal" onclick="handleOverlayClick(event, 'authModal', closeAuthModal)">
+    <div class="modal-box auth-box">
+      <button class="close-btn" onclick="closeAuthModal()">✕</button>
+
+      <div id="loginForm">
+        <div class="modal-logo">👤</div>
+        <h2>Welcome Back!</h2>
+        <p class="modal-sub">Sign in to your account</p>
+        <div class="input-group">
+          <label>Email</label>
+          <input type="email" id="loginEmail" placeholder="your@email.com">
+        </div>
+        <div class="input-group">
+          <label>Password</label>
+          <input type="password" id="loginPassword" placeholder="Enter password">
+        </div>
+        <button class="btn-full" onclick="login()">Sign In</button>
+        <p class="modal-switch">Don't have an account? <span onclick="switchToSignup()">Sign Up</span></p>
+      </div>
+
+      <div id="signupForm" style="display:none;">
+        <div class="modal-logo">🎉</div>
+        <h2>Create Account</h2>
+        <p class="modal-sub">Join Sri Satya Sai Textiles</p>
+        <div class="input-group">
+          <label>Full Name</label>
+          <input type="text" id="signupName" placeholder="Your name">
+        </div>
+        <div class="input-group">
+          <label>Email</label>
+          <input type="email" id="signupEmail" placeholder="your@email.com">
+        </div>
+        <div class="input-group">
+          <label>Password</label>
+          <input type="password" id="signupPassword" placeholder="Min 6 characters">
+        </div>
+        <button class="btn-full" onclick="signUp()">Create Account</button>
+        <p class="modal-switch">Already have an account? <span onclick="switchToLogin()">Sign In</span></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cart Modal -->
+  <div class="modal-overlay" id="cartModal" onclick="handleOverlayClick(event, 'cartModal', closeCart)">
+    <div class="cart-drawer">
+      <div class="cart-header">
+        <h2>🛒 Your Cart (<span id="modal-cart-count">0</span>)</h2>
+        <button class="close-btn" onclick="closeCart()">✕</button>
+      </div>
+      <div id="cart-items" class="cart-items"></div>
+      <div class="cart-footer">
+        <div class="cart-summary">
+          <div class="summary-row"><span>Subtotal</span><span>₹<span id="cart-subtotal">0</span></span></div>
+          <div class="summary-row"><span>Shipping</span><span id="shipping-text">FREE</span></div>
+          <div class="summary-row total-row"><span>Total</span><span>₹<span id="cart-total">0</span></span></div>
+        </div>
+        <button class="checkout-btn" onclick="checkout()">Proceed to Checkout →</button>
+        <button class="continue-btn" onclick="closeCart()">Continue Shopping</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Wishlist Modal -->
+  <div class="modal-overlay" id="wishlistModal" onclick="handleOverlayClick(event, 'wishlistModal', toggleWishlistModal)">
+    <div class="cart-drawer">
+      <div class="cart-header">
+        <h2>🤍 Wishlist (<span id="wishlist-modal-count">0</span>)</h2>
+        <button class="close-btn" onclick="toggleWishlistModal()">✕</button>
+      </div>
+      <div id="wishlist-items" class="cart-items"></div>
+    </div>
+  </div>
+
+  <!-- Quick View Modal -->
+  <div class="modal-overlay" id="quickViewModal" onclick="handleOverlayClick(event, 'quickViewModal', closeQuickView)">
+    <div class="modal-box quick-view-box">
+      <button class="close-btn" onclick="closeQuickView()">✕</button>
+      <div id="quickViewContent"></div>
+    </div>
+  </div>
+
+  <!-- Orders Modal -->
+  <div class="modal-overlay" id="ordersModal" onclick="handleOverlayClick(event, 'ordersModal', closeOrdersModal)">
+    <div class="cart-drawer">
+      <div class="cart-header">
+        <h2>📦 My Orders (<span id="orders-modal-count">0</span>)</h2>
+        <button class="close-btn" onclick="closeOrdersModal()">✕</button>
+      </div>
+      <div id="orders-list" class="cart-items"></div>
+    </div>
+  </div>
+
+  <!-- Checkout Modal -->
+  <div class="modal-overlay" id="checkoutModal" onclick="handleOverlayClick(event, 'checkoutModal', closeCheckout)">
+    <div class="modal-box checkout-box">
+      <button class="close-btn" onclick="closeCheckout()">✕</button>
+      <h2>📦 Checkout</h2>
+      <p class="modal-sub">Enter your delivery details</p>
+      <div class="checkout-grid">
+        <div class="input-group">
+          <label>Full Name *</label>
+          <input type="text" id="co-name" placeholder="Your full name">
+        </div>
+        <div class="input-group">
+          <label>Phone Number *</label>
+          <input type="tel" id="co-phone" placeholder="+91 XXXXXXXXXX">
+        </div>
+        <div class="input-group full">
+          <label>Address *</label>
+          <textarea id="co-address" placeholder="Door No, Street, Area" rows="2"></textarea>
+        </div>
+        <div class="input-group">
+          <label>City *</label>
+          <input type="text" id="co-city" placeholder="City">
+        </div>
+        <div class="input-group">
+          <label>Pincode *</label>
+          <input type="text" id="co-pin" placeholder="500001">
+        </div>
+        <div class="input-group full">
+          <label>Payment Method</label>
+          <div class="payment-options">
+            <label class="pay-opt"><input type="radio" name="payment" value="cod" checked> Cash on Delivery</label>
+            <label class="pay-opt"><input type="radio" name="payment" value="upi"> UPI / Online Payment</label>
+          </div>
+        </div>
+      </div>
+      <div class="order-summary-mini" id="orderSummaryMini"></div>
+      <button class="btn-full success" onclick="placeOrder()">🎉 Place Order</button>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="footer-logo">🧵 Sri Satya Sai Textiles</div>
+        <p>Quality textiles from the heart of Srikakulam, serving families across Andhra Pradesh since years.</p>
+        <div class="footer-socials">
+          <span title="Email us">📧</span>
+          <span title="Call us">📞</span>
+          <span title="WhatsApp">💬</span>
+        </div>
+      </div>
+      <div class="footer-links">
+        <h4>Quick Links</h4>
+        <a onclick="filterCategory('Men')">Men's Collection</a>
+        <a onclick="filterCategory('Women')">Women's Collection</a>
+        <a onclick="filterCategory('Kids')">Kids Collection</a>
+        <a onclick="filterCategory('Home')">Home Textiles</a>
+      </div>
+      <div class="footer-links">
+        <h4>Support</h4>
+        <a href="contact.html">Contact Us</a>
+        <a href="#">Shipping Policy</a>
+        <a href="#">Return Policy</a>
+        <a href="#">FAQ</a>
+      </div>
+      <div class="footer-contact">
+        <h4>Contact</h4>
+        <p>📍 Srikakulam, Andhra Pradesh</p>
+        <p>📧 vikashmathsa1999@gmail.com</p>
+        <p>📞 +91 XXXXXXXXXX</p>
+        <a href="contact.html" class="contact-btn" target="_blank">Send a Message</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Sri Satya Sai Textiles. All Rights Reserved. | Made with ❤️ in Srikakulam</p>
+    </div>
+  </footer>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+<script src="firebase.js"></script>
+<script src="products.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
