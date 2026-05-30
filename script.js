@@ -1022,39 +1022,3 @@ document.addEventListener('keydown', (e) => {
     document.getElementById('profileDropdown')?.remove();
   }
 });
-
-// =======================
-// Mobile Bottom Nav Sync
-// =======================
-function syncMobileNav() {
-  // Cart badge
-  const cartCount = cart.reduce((t, i) => t + i.qty, 0);
-  const mobCart = document.getElementById('mob-cart-count');
-  if (mobCart) {
-    mobCart.textContent = cartCount;
-    mobCart.style.display = cartCount > 0 ? 'flex' : 'none';
-  }
-  // Wishlist badge
-  const mobWishlist = document.getElementById('mob-wishlist-count');
-  if (mobWishlist) {
-    mobWishlist.textContent = wishlist.length;
-    mobWishlist.style.display = wishlist.length > 0 ? 'flex' : 'none';
-  }
-  // User label
-  const mobUser = document.getElementById('mob-user-label');
-  if (mobUser) {
-    const user = typeof firebaseAuth !== 'undefined' && firebaseAuth ? firebaseAuth.getCurrentUser() : null;
-    mobUser.textContent = user ? (user.name?.split(' ')[0] || 'Me') : 'Account';
-  }
-}
-
-// Patch updateCartCount to also sync mobile nav
-const _origUpdateCartCount = typeof updateCartCount === 'function' ? updateCartCount : null;
-function updateCartCount() {
-  if (_origUpdateCartCount) _origUpdateCartCount();
-  syncMobileNav();
-}
-
-// Run sync on DOM ready
-document.addEventListener('DOMContentLoaded', syncMobileNav);
-window.addEventListener('firebaseReady', syncMobileNav);
