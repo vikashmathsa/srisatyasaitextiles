@@ -389,8 +389,8 @@ function toggleTheme() {
 // Apply saved preference immediately on load
 (function() {
   const saved = localStorage.getItem('sstTheme');
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  applyTheme(saved === 'dark' || (!saved && prefersDark));
+  // Default to dark if no saved preference
+  applyTheme(saved === 'light' ? false : true);
 })();
 
 // ========================

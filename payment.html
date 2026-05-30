@@ -13,21 +13,24 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
   <style>
     :root {
-      --gold: #f0b429;
-      --dark: #0f172a;
-      --blue: #1d4ed8;
-      --green: #16a34a;
-      --red: #dc2626;
-      --muted: #64748b;
-      --border: #e2e8f0;
-      --bg: #f8fafc;
+      --gold: #d4a843;
+      --gold-lt: #f0ddb0;
+      --dark: #eee8df;
+      --blue: #d4a843;
+      --green: #4ade80;
+      --red: #f87171;
+      --muted: #7a7068;
+      --border: #2a2520;
+      --bg: #0d0d0b;
+      --bg-card: #141410;
+      --bg-input: #1a1a16;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: 'DM Sans', sans-serif;
-      background: var(--bg);
+      background: var(--bg); color: var(--dark);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -35,7 +38,7 @@
 
     /* ── Top Bar ── */
     .top-bar {
-      background: var(--dark);
+      background: #0a0a08;
       color: var(--gold);
       text-align: center;
       font-size: 13px;
@@ -46,25 +49,25 @@
 
     /* ── Header ── */
     header {
-      background: white;
+      background: #141410;
       border-bottom: 1px solid var(--border);
       padding: 14px 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.4);
     }
 
     .logo-wrap { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-    .logo-name { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--dark); font-weight: 700; }
+    .logo-name { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--gold-lt); font-weight: 700; }
     .logo-sub  { font-size: 10px; color: var(--muted); letter-spacing: 3px; text-transform: uppercase; }
 
     .secure-badge {
       display: flex; align-items: center; gap: 6px;
-      background: #f0fdf4; color: var(--green);
+      background: rgba(74,222,128,0.1); color: var(--green);
       padding: 6px 14px; border-radius: 50px;
       font-size: 13px; font-weight: 600;
-      border: 1px solid #bbf7d0;
+      border: 1px solid rgba(74,222,128,0.3);
     }
 
     /* ── Steps ── */
@@ -80,7 +83,7 @@
     .step.done   { color: var(--green); }
     .step-num {
       width: 28px; height: 28px; border-radius: 50%;
-      background: var(--border); color: var(--muted);
+      background: #2a2520; color: var(--muted);
       display: flex; align-items: center; justify-content: center;
       font-size: 13px; font-weight: 700;
     }
@@ -102,7 +105,7 @@
 
     /* ── Card ── */
     .card {
-      background: white; border-radius: 16px;
+      background: var(--bg-card); border-radius: 16px;
       border: 1px solid var(--border);
       box-shadow: 0 2px 12px rgba(0,0,0,0.06);
       overflow: hidden;
@@ -126,7 +129,7 @@
     #qrcode {
       display: inline-block;
       padding: 12px;
-      background: white;
+      background: var(--bg-card);
       border-radius: 12px;
       border: 2px solid var(--border);
       box-shadow: 0 4px 20px rgba(0,0,0,0.08);
@@ -146,7 +149,7 @@
     }
 
     .upi-id-box {
-      background: var(--bg);
+      background: var(--bg); color: var(--dark);
       border: 1px solid var(--border);
       border-radius: 10px;
       padding: 12px 16px;
@@ -171,12 +174,12 @@
       display: flex; align-items: center; justify-content: center; gap: 8px;
       padding: 12px; border-radius: 12px;
       border: 1.5px solid var(--border);
-      background: white; cursor: pointer;
+      background: var(--bg-card); cursor: pointer;
       font-size: 14px; font-weight: 600; color: var(--dark);
       text-decoration: none;
       transition: all 0.2s;
     }
-    .app-btn:hover { border-color: var(--blue); background: #eff6ff; }
+    .app-btn:hover { border-color: var(--blue); background: rgba(212,168,67,0.1); }
     .app-btn img { width: 24px; height: 24px; border-radius: 6px; }
 
     /* ── Steps to pay ── */
@@ -189,18 +192,18 @@
     }
     .how-num {
       min-width: 28px; height: 28px; border-radius: 50%;
-      background: #eff6ff; color: var(--blue);
+      background: rgba(212,168,67,0.1); color: var(--blue);
       display: flex; align-items: center; justify-content: center;
       font-size: 13px; font-weight: 700;
     }
-    .how-step p { font-size: 14px; color: #334155; line-height: 1.5; }
+    .how-step p { font-size: 14px; color: #c8b89a; line-height: 1.5; }
     .how-step strong { color: var(--dark); }
 
     /* ── Order Summary ── */
     .order-items { display: flex; flex-direction: column; gap: 10px; }
     .order-item {
       display: flex; justify-content: space-between; align-items: center;
-      font-size: 14px; color: #334155;
+      font-size: 14px; color: #c8b89a;
     }
     .order-item-name { font-weight: 500; }
     .order-item-price { font-weight: 600; color: var(--dark); }
@@ -212,7 +215,7 @@
       font-size: 18px; font-weight: 700; color: var(--dark);
     }
     .order-id-tag {
-      background: #eff6ff; color: var(--blue);
+      background: rgba(212,168,67,0.1); color: var(--blue);
       border-radius: 8px; padding: 8px 12px;
       font-size: 13px; font-weight: 600;
       margin-top: 14px; text-align: center;
@@ -268,7 +271,7 @@
     }
     #successOverlay.show { display: flex; }
     .success-box {
-      background: white; border-radius: 20px;
+      background: var(--bg-card); border-radius: 20px;
       padding: 48px 40px; text-align: center;
       max-width: 420px; width: 90%;
       animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -281,13 +284,13 @@
     .success-box h2 { font-family: 'Playfair Display', serif; font-size: 28px; color: var(--dark); margin-bottom: 8px; }
     .success-box p  { color: var(--muted); margin-bottom: 10px; font-size: 14px; }
     .success-order-id {
-      background: #eff6ff; color: var(--blue);
+      background: rgba(212,168,67,0.1); color: var(--blue);
       padding: 10px; border-radius: 10px;
       font-weight: 700; margin: 12px 0;
       font-size: 15px;
     }
     .success-total {
-      background: #f0fdf4; color: var(--green);
+      background: rgba(74,222,128,0.08); color: var(--green);
       padding: 12px; border-radius: 10px;
       font-weight: 600; margin-bottom: 20px;
     }

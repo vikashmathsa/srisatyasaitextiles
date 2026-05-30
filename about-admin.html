@@ -11,13 +11,12 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --gold: #f0b429; --gold-dark: #c8932a; --navy: #0f172a; --navy-mid: #1e293b;
-      --text: #1e293b; --text-muted: #64748b; --bg: #f8f7f4; --bg-card: #ffffff;
-      --border: #e2e8f0; --radius: 16px;
+      --gold: #d4a843; --gold-dark: #a07820; --navy: #0a0a08; --navy-mid: #141410;
+      --text: #eee8df; --text-muted: #7a7068; --bg: #0d0d0b; --bg-card: #141410;
+      --border: #2a2520; --radius: 16px;
       --font-display: 'Playfair Display', Georgia, serif;
       --font-body: 'DM Sans', sans-serif;
     }
-    body.dark-mode { --text: #f1f5f9; --text-muted: #94a3b8; --bg: #0f172a; --bg-card: #1e293b; --border: #334155; }
     body { font-family: var(--font-body); background: var(--bg); color: var(--text); min-height: 100vh; transition: background 0.3s, color 0.3s; }
     .top-bar { background: var(--navy); color: #cbd5e1; font-size: 12px; text-align: center; padding: 7px 1rem; }
     .top-bar span { margin: 0 8px; }
@@ -53,15 +52,15 @@
     .bio-text:last-child { margin-bottom: 0; }
     .skills-grid { display: flex; flex-wrap: wrap; gap: 8px; }
     .skill-tag { font-size: 12px; font-weight: 500; padding: 5px 14px; border-radius: 20px; background: rgba(240,180,41,0.08); color: #c8932a; border: 1px solid rgba(240,180,41,0.2); }
-    body.dark-mode .skill-tag { color: var(--gold); }
+    .skill-tag { color: var(--gold); background: rgba(212,168,67,0.1); border-color: rgba(212,168,67,0.25); }
     .info-row { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
     .info-row:last-child { border-bottom: none; }
     .info-icon { font-size: 18px; width: 28px; flex-shrink: 0; margin-top: 1px; }
     .info-label { color: var(--text-muted); font-size: 11px; font-weight: 600; letter-spacing: 0.05em; margin-bottom: 2px; }
     .info-value { color: var(--text); font-weight: 500; }
-    .info-value a { color: #1d6abf; text-decoration: none; }
-    .info-value a:hover { text-decoration: underline; }
-    body.dark-mode .info-value a { color: #60a5fa; }
+    .info-value a { color: var(--gold); text-decoration: none; }
+    .info-value a:hover { text-decoration: underline; color: var(--gold-dark); }
+
     .yt-card { background: linear-gradient(135deg, #1a0a0a, #2d0a0a); border: 1px solid rgba(255,0,0,0.25); border-radius: var(--radius); padding: 28px; text-align: center; position: relative; overflow: hidden; }
     .yt-card::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 50% 0%, rgba(255,0,0,0.12), transparent 60%); }
     .yt-logo { font-size: 48px; margin-bottom: 10px; position: relative; }
@@ -71,7 +70,7 @@
     .yt-btn:hover { background: #cc0000; transform: translateY(-2px); }
     .yt-handle { font-size: 12px; color: #94a3b8; margin-top: 14px; position: relative; }
     .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-    .stat-card { background: var(--bg); border-radius: 10px; padding: 14px; text-align: center; border: 1px solid var(--border); }
+    .stat-card { background: #1a1a16; border-radius: 10px; padding: 14px; text-align: center; border: 1px solid var(--border); }
     .stat-num { font-size: 22px; font-weight: 700; color: var(--text); }
     .stat-lbl { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
     .footer-strip { background: var(--navy); text-align: center; padding: 18px; font-size: 12px; color: #64748b; }
@@ -97,7 +96,7 @@
     </a>
     <div class="header-right">
       <a class="back-btn" href="index.html">← Back to Shop</a>
-      <button class="theme-btn" id="themeToggle" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+
     </div>
   </div>
 </header>
@@ -225,21 +224,6 @@
   © 2026 Sri Satya Sai Textiles · Designed with ❤️ by <a href="https://www.youtube.com/@vikashmathsa3693" target="_blank">Vikash Mathsa</a>, Srikakulam
 </div>
 
-<script>
-  function applyTheme(dark) {
-    document.body.classList.toggle('dark-mode', dark);
-    document.getElementById('themeToggle').textContent = dark ? '☀️' : '🌙';
-  }
-  function toggleTheme() {
-    const dark = !document.body.classList.contains('dark-mode');
-    localStorage.setItem('sstTheme', dark ? 'dark' : 'light');
-    applyTheme(dark);
-  }
-  (function() {
-    const saved = localStorage.getItem('sstTheme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    applyTheme(saved === 'dark' || (!saved && prefersDark));
-  })();
-</script>
+<script>/* dark mode always on */</script>
 </body>
 </html>
