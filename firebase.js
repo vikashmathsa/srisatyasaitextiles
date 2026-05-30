@@ -62,8 +62,9 @@ window.signUp = async function() {
   const password = document.getElementById('signupPassword').value.trim();
 
   if (!name || !email || !password) { _notify('⚠️ All fields are required!', 'error'); return; }
+  if (name.length < 2) { _notify('⚠️ Please enter your full name!', 'error'); return; }
   if (password.length < 6)          { _notify('⚠️ Password must be at least 6 characters!', 'error'); return; }
-  if (!email.includes('@'))         { _notify('⚠️ Please enter a valid email!', 'error'); return; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { _notify('⚠️ Please enter a valid email address!', 'error'); return; }
 
   try {
     const userCredential = await auth.createUserWithEmailAndPassword(email, password);
@@ -72,7 +73,13 @@ window.signUp = async function() {
     closeAuthModal();
   } catch (error) {
     console.error('SignUp error:', error);
-    _notify('❌ ' + error.message, 'error');
+    const friendlyMsg = {
+      'auth/email-already-in-use': '⚠️ An account with this email already exists.',
+      'auth/invalid-email':        '❌ Please enter a valid email address.',
+      'auth/weak-password':        '⚠️ Password is too weak. Use at least 6 characters.',
+      'auth/operation-not-allowed': '❌ Email sign-up is currently disabled.',
+    }[error.code] || '❌ Sign-up failed. Please try again.';
+    _notify(friendlyMsg, 'error');
   }
 };
 
@@ -88,7 +95,14 @@ window.login = async function() {
     _notify('👋 Welcome back!', 'success');
   } catch (error) {
     console.error('Login error:', error);
-    _notify('❌ Invalid email or password!', 'error');
+    const friendlyMsg = {
+      'auth/user-not-found':  '❌ No account found with this email.',
+      'auth/wrong-password':  '❌ Incorrect password. Please try again.',
+      'auth/invalid-email':   '❌ Please enter a valid email address.',
+      'auth/too-many-requests': '⚠️ Too many attempts. Please try again later.',
+      'auth/user-disabled':   '❌ This account has been disabled.',
+    }[error.code] || '❌ Login failed. Please check your credentials.';
+    _notify(friendlyMsg, 'error');
   }
 };
 

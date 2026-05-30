@@ -549,9 +549,18 @@ function renderCart() {
   modalCount.textContent = totalQty;
 
   if (cart.length === 0) {
-    container.innerHTML = `<div class="cart-empty"><div class="empty-icon">🛒</div><p>Your cart is empty</p><p>Add some products!</p></div>`;
+    container.innerHTML = `
+      <div class="cart-empty">
+        <div class="empty-icon">🛒</div>
+        <h3>Your cart is empty</h3>
+        <p>Browse our collection and add items to your cart</p>
+        <button onclick="closeCart(); scrollToProducts()" style="margin-top:12px;background:var(--blue);color:white;border:none;padding:10px 24px;border-radius:50px;font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font-body)">
+          Shop Now
+        </button>
+      </div>`;
     subtotalEl.textContent = '0';
     totalEl.textContent = '0';
+    shippingEl.textContent = 'FREE';
     return;
   }
 
@@ -658,6 +667,9 @@ function placeOrder() {
   if (phone.replace(/\D/g, '').length < 10) {
     showNotification('⚠️ Please enter a valid phone number!', 'error'); return;
   }
+  if (!/^\d{6}$/.test(pin)) {
+    showNotification('⚠️ Please enter a valid 6-digit pincode!', 'error'); return;
+  }
 
   const subtotal    = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const shipping    = subtotal >= 999 ? 0 : 49;
@@ -733,20 +745,25 @@ function placeOrder() {
     position:fixed; inset:0; background:rgba(15,23,42,0.85); z-index:9999;
     display:flex; align-items:center; justify-content:center; backdrop-filter:blur(4px);
   `;
+  const isDark = document.body.classList.contains('dark-mode');
+  const cardBg  = isDark ? '#141e2e' : '#ffffff';
+  const textCol = isDark ? '#f1f5f9' : '#0f172a';
+  const mutedCol = isDark ? '#94a3b8' : '#64748b';
+
   msg.innerHTML = `
-    <div style="background:white; border-radius:20px; padding:48px 40px; text-align:center; max-width:420px; width:90%;">
-      <div style="font-size:64px; margin-bottom:16px;">🎉</div>
-      <h2 style="font-family:'Playfair Display',serif; font-size:28px; color:#0f172a; margin-bottom:8px;">Order Placed!</h2>
-      <p style="color:#64748b; margin-bottom:8px;">Thank you, <strong>${name}</strong>!</p>
-      <p style="background:#eff6ff; color:#1d4ed8; padding:10px; border-radius:10px; font-weight:700; margin-bottom:12px; font-size:15px;">
-        Order ID: ${orderId}
-      </p>
-      <p style="background:#f0fdf4; color:#16a34a; padding:12px; border-radius:10px; font-weight:600; margin-bottom:20px;">
-        💰 Total: ₹${total.toLocaleString()} | ${paymentMode}
-      </p>
-      <p style="font-size:13px; color:#64748b; margin-bottom:20px;">We will contact you at <strong>${phone}</strong> to confirm delivery.</p>
-      <button onclick="document.getElementById('orderSuccessOverlay').remove(); document.body.style.overflow='';" style="background:#1d4ed8; color:white; border:none; padding:14px 32px; border-radius:50px; font-size:16px; font-weight:700; cursor:pointer;">
-        Continue Shopping
+    <div style="background:${cardBg}; border-radius:24px; padding:48px 40px; text-align:center; max-width:440px; width:90%; border:1px solid ${isDark ? '#1e293b' : '#e2e8f0'}; box-shadow:0 24px 60px rgba(0,0,0,0.35);">
+      <div style="font-size:72px; margin-bottom:8px; animation: bounceIn 0.6s ease;">🎉</div>
+      <h2 style="font-family:'Playfair Display',serif; font-size:28px; color:${textCol}; margin-bottom:6px;">Order Placed!</h2>
+      <p style="color:${mutedCol}; margin-bottom:16px; font-size:15px;">Thank you, <strong style="color:${textCol}">${name}</strong>! We've received your order.</p>
+      <div style="background:${isDark ? '#1a2540' : '#eff6ff'}; color:#1d4ed8; padding:12px 16px; border-radius:12px; font-weight:700; margin-bottom:10px; font-size:15px; letter-spacing:0.03em;">
+        🧾 Order ID: ${orderId}
+      </div>
+      <div style="background:${isDark ? '#0d2a1a' : '#f0fdf4'}; color:#16a34a; padding:12px 16px; border-radius:12px; font-weight:600; margin-bottom:8px;">
+        💰 ₹${total.toLocaleString()} &nbsp;|&nbsp; ${paymentMode}
+      </div>
+      <p style="font-size:13px; color:${mutedCol}; margin:12px 0 24px;">We'll contact you on <strong style="color:${textCol}">${phone}</strong> to confirm delivery.</p>
+      <button onclick="document.getElementById('orderSuccessOverlay').remove(); document.body.style.overflow='';" style="background:linear-gradient(135deg,#1d4ed8,#1e3a8a); color:white; border:none; padding:14px 36px; border-radius:50px; font-size:16px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; box-shadow:0 6px 20px rgba(29,78,216,0.4);">
+        Continue Shopping →
       </button>
     </div>
   `;
@@ -837,17 +854,29 @@ document.addEventListener('DOMContentLoaded', () => {
   const searchClear = document.getElementById('searchClear');
 
   if (searchInput) {
+    let searchTimer = null;
     searchInput.addEventListener('input', (e) => {
       const term = e.target.value.toLowerCase().trim();
       searchClear.style.display = term ? 'block' : 'none';
 
-      if (!term) { renderProducts(); return; }
+      // Debounce — wait 280ms after user stops typing
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(() => {
+        if (!term) { renderProducts(); return; }
+        const catalogue = (typeof liveProducts !== 'undefined' && liveProducts.length > 0) ? liveProducts : products;
+        const filtered = catalogue.filter(p =>
+          p.name.toLowerCase().includes(term) ||
+          p.category.toLowerCase().includes(term)
+        );
+        document.getElementById('sectionTitle').textContent = `Search results for "${e.target.value}"`;
+        renderProducts(filtered);
+        document.getElementById('productsSection')?.scrollIntoView({ behavior: 'smooth' });
+      }, 280);
+    });
 
-      const catalogue = (typeof liveProducts !== 'undefined' && liveProducts.length > 0) ? liveProducts : products;
-      const filtered = catalogue.filter(p => p.name.toLowerCase().includes(term) || p.category.toLowerCase().includes(term));
-      document.getElementById('sectionTitle').textContent = `Search results for "${e.target.value}"`;
-      renderProducts(filtered);
-      document.getElementById('productsSection')?.scrollIntoView({ behavior: 'smooth' });
+    // Allow pressing Enter to also trigger search immediately
+    searchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') clearSearch();
     });
   }
 
@@ -858,6 +887,19 @@ document.addEventListener('DOMContentLoaded', () => {
   updateUserUI();
   initHeroSlider();
 });
+
+// =======================
+// Search Clear
+// =======================
+function clearSearch() {
+  const input = document.getElementById('searchInput');
+  const clearBtn = document.getElementById('searchClear');
+  if (input) input.value = '';
+  if (clearBtn) clearBtn.style.display = 'none';
+  document.getElementById('sectionTitle').textContent =
+    currentCategory === 'All' ? 'All Products' : currentCategory + ' Collection';
+  renderProducts();
+}
 
 // =======================
 // Modal Helpers
@@ -882,17 +924,28 @@ function handleOverlayClick(e, modalId, closeFn) {
 // =======================
 // Notifications
 // =======================
+let _notifStack = 0; // track how many are showing for vertical stacking
+
 function showNotification(message, type = 'default') {
+  _notifStack++;
   const notif = document.createElement('div');
   notif.className = `notification ${type}`;
   notif.textContent = message;
+  // Stack vertically if multiple notifications at once
+  notif.style.bottom = (24 + (_notifStack - 1) * 60) + 'px';
   document.body.appendChild(notif);
-  setTimeout(() => {
+
+  const dismiss = () => {
     notif.style.opacity = '0';
-    notif.style.transform = 'translateY(20px)';
-    notif.style.transition = 'all 0.3s ease';
-    setTimeout(() => notif.remove(), 300);
-  }, 2500);
+    notif.style.transform = 'translateX(100%)';
+    notif.style.transition = 'all 0.35s ease';
+    setTimeout(() => { notif.remove(); _notifStack = Math.max(0, _notifStack - 1); }, 350);
+  };
+
+  // Dismiss on click
+  notif.addEventListener('click', dismiss);
+
+  setTimeout(dismiss, 3000);
 }
 
 // =======================
@@ -901,6 +954,26 @@ function showNotification(message, type = 'default') {
 window.addEventListener('scroll', () => {
   const header = document.getElementById('mainHeader');
   if (header) {
-    header.style.boxShadow = window.scrollY > 10 ? '0 4px 20px rgba(0,0,0,0.12)' : '0 2px 12px rgba(0,0,0,0.08)';
+    if (window.scrollY > 10) {
+      header.style.boxShadow = '0 4px 24px rgba(0,0,0,0.14)';
+      header.classList.add('scrolled');
+    } else {
+      header.style.boxShadow = '0 2px 12px rgba(0,0,0,0.08)';
+      header.classList.remove('scrolled');
+    }
+  }
+}, { passive: true });
+// =======================
+// Keyboard Accessibility
+// =======================
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    // Close any open modal on Escape
+    ['cartModal', 'authModal', 'wishlistModal', 'quickViewModal', 'ordersModal', 'checkoutModal'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el && el.classList.contains('open')) closeModal(id);
+    });
+    // Close profile dropdown
+    document.getElementById('profileDropdown')?.remove();
   }
 });

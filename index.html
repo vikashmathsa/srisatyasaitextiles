@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sri Satya Sai Textiles</title>
+  <title>Sri Satya Sai Textiles — Quality Textiles from Srikakulam</title>
+  <meta name="description" content="Shop premium textiles — sarees, kurtis, shirts, kids wear and home textiles from Sri Satya Sai Textiles, Srikakulam. Fast delivery across AP &amp; Telangana.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -62,17 +63,19 @@
   <div class="top-bar">
     <div class="top-bar-inner">
       <span>🚚 Free Shipping on Orders Above ₹999</span>
-      <span>|</span>
+      <span aria-hidden="true">·</span>
       <span>💳 COD Available</span>
-      <span>|</span>
-      <span>⚡ Fast Delivery Across AP & Telangana</span>
+      <span aria-hidden="true">·</span>
+      <span>⚡ Fast Delivery Across AP &amp; Telangana</span>
+      <span aria-hidden="true">·</span>
+      <span>↩ 7-Day Easy Returns</span>
     </div>
   </div>
 
   <header id="mainHeader">
     <div class="main-header">
       <div class="logo">
-        <img src="shop_logo.jpg" alt="Sri Satya Sai Textiles Logo" class="logo-img">
+        <img src="shop_logo.jpg" alt="Sri Satya Sai Textiles Logo" class="logo-img" loading="lazy">
         <div>
           <div class="logo-name">Sri Satya Sai</div>
           <div class="logo-sub">TEXTILES</div>
@@ -81,25 +84,25 @@
 
       <div class="search-bar">
         <span class="search-icon">🔍</span>
-        <input type="text" placeholder="Search shirts, kurtis, sarees, bedsheets..." id="searchInput">
+        <input type="text" placeholder="Search shirts, kurtis, sarees, bedsheets…" autocomplete="off" spellcheck="false" id="searchInput">
         <button class="search-clear" id="searchClear" onclick="clearSearch()">✕</button>
       </div>
 
       <div class="header-actions">
         <button class="theme-toggle" id="themeToggle" title="Toggle Dark/Light Mode" onclick="toggleTheme()">🌙</button>
 
-        <div class="action-btn" id="wishlistBtn" onclick="toggleWishlistModal()" title="Wishlist">
+        <div class="action-btn" id="wishlistBtn" onclick="toggleWishlistModal()" title="Wishlist" aria-label="Open Wishlist">
           <span class="action-icon">🤍</span>
           <span class="action-count" id="wishlist-count" style="display:none">0</span>
           <span class="action-label">Wishlist</span>
         </div>
 
-        <div class="action-btn" id="userProfile" onclick="toggleAuthModal()" title="Account">
+        <div class="action-btn" id="userProfile" onclick="toggleAuthModal()" title="Account" aria-label="Sign In or Account">
           <span class="action-icon">👤</span>
           <span class="action-label" id="userName">Sign In</span>
         </div>
 
-        <div class="action-btn" id="cart-icon" onclick="openCart()" title="Cart">
+        <div class="action-btn" id="cart-icon" onclick="openCart()" title="Cart" aria-label="Open Cart">
           <span class="action-icon">🛒</span>
           <span class="action-count" id="cart-count">0</span>
           <span class="action-label">Cart</span>
@@ -180,8 +183,8 @@
     <div class="no-results" id="noResults" style="display:none">
       <div class="no-results-icon">🔍</div>
       <h3>No products found</h3>
-      <p>Try a different search or category</p>
-      <button onclick="clearSearch(); filterCategory('All')">Show All Products</button>
+      <p>Try a different search term or browse all categories</p>
+      <button onclick="clearSearch(); filterCategory('All')">🔄 Show All Products</button>
     </div>
   </section>
 
@@ -314,7 +317,7 @@
         </div>
       </div>
       <div class="order-summary-mini" id="orderSummaryMini"></div>
-      <button class="btn-full success" onclick="placeOrder()">🎉 Place Order</button>
+      <button class="btn-full success" onclick="placeOrder()">🎉 Confirm &amp; Place Order</button>
     </div>
   </div>
 
@@ -322,7 +325,7 @@
     <div class="footer-inner">
       <div class="footer-brand">
         <div class="footer-logo">🧵 Sri Satya Sai Textiles</div>
-        <p>Quality textiles from the heart of Srikakulam, serving families across Andhra Pradesh since years.</p>
+        <p>Premium quality textiles from the heart of Srikakulam — sarees, kurtis, shirts & more. Proudly serving families across Andhra Pradesh &amp; Telangana.</p>
         <div class="footer-socials">
           <span title="Email us">📧</span>
           <span title="Call us">📞</span>
@@ -360,6 +363,13 @@
     </div>
   </footer>
 
+
+  <!-- Scroll to Top -->
+  <button class="scroll-top-btn" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">↑</button>
+
+  <!-- WhatsApp Float -->
+  <a href="https://wa.me/91XXXXXXXXXX?text=Hi%2C%20I%27m%20interested%20in%20your%20products!" class="whatsapp-btn" target="_blank" title="Chat on WhatsApp">💬</a>
+
 <script>
 // ========================
 // Dark / Light Mode Toggle
@@ -388,6 +398,17 @@ function toggleTheme() {
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
   applyTheme(saved === 'dark' || (!saved && prefersDark));
 })();
+
+// ========================
+// Scroll To Top
+// ========================
+window.addEventListener('scroll', () => {
+  const btn = document.getElementById('scrollTopBtn');
+  if (btn) {
+    if (window.scrollY > 400) btn.classList.add('visible');
+    else btn.classList.remove('visible');
+  }
+});
 </script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
