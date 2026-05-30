@@ -1,7 +1,10 @@
 // =======================
 // Data
 // =======================
-let cart = [];
+// Persist cart across page reloads
+let cart = (() => {
+  try { return JSON.parse(localStorage.getItem('sstCart')) || []; } catch { return []; }
+})();
 let wishlist = [];
 let currentCategory = "All";
 let currentSlide = 0;
@@ -15,10 +18,22 @@ const categories = ["All", "Men", "Women", "Kids", "Home"];
 // =======================
 // Firestore Product Loader
 // =======================
-function loadLiveProducts() {
+const PRODUCT_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+let _productCacheTime = 0;
+
+function loadLiveProducts(forceRefresh = false) {
+  const now = Date.now();
+  if (!forceRefresh && liveProducts.length > 0 && (now - _productCacheTime) < PRODUCT_CACHE_TTL) {
+    // Cache still fresh — just re-render
+    renderCategories();
+    renderProducts();
+    updateCategoryCards();
+    return;
+  }
   const db = firebase.firestore();
   db.collection('products').get().then(snap => {
     liveProducts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    _productCacheTime = Date.now();
     renderCategories();
     renderProducts();
     updateCategoryCards();
@@ -52,10 +67,10 @@ function initHeroSlider() {
 
 function startSlideTimer() {
   clearInterval(slideTimer);
-  slideTimer = setInterval(() => changeSlide(1), 5000);
+  slideTimer = setInterval(() => changeSlide(1, false), 5000);
 }
 
-function changeSlide(dir) {
+function changeSlide(dir, resetTimer = false) {
   const slides = document.querySelectorAll('.hero-slide');
   const dots = document.querySelectorAll('.hero-dot');
   slides[currentSlide].classList.remove('active');
@@ -64,7 +79,7 @@ function changeSlide(dir) {
   currentSlide = (currentSlide + dir + slides.length) % slides.length;
   slides[currentSlide].classList.add('active');
   dots[currentSlide]?.classList.add('active');
-  startSlideTimer();
+  if (resetTimer) startSlideTimer();
 }
 
 function goToSlide(i) {
@@ -75,7 +90,7 @@ function goToSlide(i) {
   currentSlide = i;
   slides[currentSlide].classList.add('active');
   dots[currentSlide]?.classList.add('active');
-  startSlideTimer();
+  startSlideTimer(); // reset on manual nav
 }
 
 // =======================
@@ -321,6 +336,9 @@ function scrollToProducts() {
   document.getElementById('productsSection')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
+// Tracks whether the first product load has happened (for animation)
+let _productsFirstLoad = true;
+
 // =======================
 // Render Products
 // =======================
@@ -340,9 +358,13 @@ function renderProducts(filteredProducts = null) {
 
   if (list.length === 0) {
     noResults.style.display = 'block';
+    _productsFirstLoad = false;
     return;
   }
   noResults.style.display = 'none';
+
+  const animate = _productsFirstLoad || filteredProducts !== null;
+  _productsFirstLoad = false;
 
   list.forEach((product, i) => {
     const discount = Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100);
@@ -352,8 +374,8 @@ function renderProducts(filteredProducts = null) {
     const productIdAttr = typeof product.id === 'string' ? `'${product.id}'` : product.id;
 
     const card = document.createElement('div');
-    card.className = 'product-card';
-    card.style.animationDelay = `${i * 0.05}s`;
+    card.className = 'product-card' + (animate ? ' animate-in' : '');
+    if (animate) card.style.animationDelay = `${i * 0.02}s`;
     card.innerHTML = `
       <div class="product-img-wrap">
         <img src="${product.img}" alt="${product.name}" loading="lazy">
@@ -413,7 +435,14 @@ function toggleWishlist(productId) {
   }
 
   updateWishlistCount();
-  renderProducts();
+  updateWishlistCardUI(productId);
+}
+
+// Update only the wishlist button on the specific product card
+function updateWishlistCardUI(productId) {
+  const btn = document.getElementById('wl-' + productId);
+  const inWL = wishlist.some(item => item.id === productId);
+  if (btn) btn.textContent = inWL ? '❤️' : '🤍';
 }
 
 function updateWishlistCount() {
@@ -506,12 +535,23 @@ function addToCart(productId) {
   }
 
   updateCartCount();
-  renderProducts();
+  updateProductCardUI(productId);
+}
+
+// Update a single product card's button state without re-rendering everything
+function updateProductCardUI(productId) {
+  const btn = document.getElementById('cart-btn-' + productId);
+  const inCart = cart.some(item => item.id === productId);
+  if (btn) {
+    btn.textContent = inCart ? '✅ Added' : '🛒 Add to Cart';
+    btn.classList.toggle('in-cart', inCart);
+  }
 }
 
 function updateCartCount() {
   const total = cart.reduce((sum, item) => sum + item.quantity, 0);
   document.getElementById('cart-count').textContent = total;
+  try { localStorage.setItem('sstCart', JSON.stringify(cart)); } catch {}
 }
 
 function openCart() {
@@ -590,14 +630,15 @@ function changeQuantity(index, change) {
   if (cart[index].quantity < 1) cart[index].quantity = 1;
   renderCart();
   updateCartCount();
-  renderProducts();
 }
 
 function removeFromCart(index) {
+  const removed = cart[index];
   cart.splice(index, 1);
   renderCart();
   updateCartCount();
-  renderProducts();
+  // Update just the removed item's button
+  if (removed) updateProductCardUI(removed.id);
 }
 
 function checkout() {
@@ -704,7 +745,11 @@ function placeOrder() {
   closeCheckout();
   cart = [];
   updateCartCount();
-  renderProducts();
+  // Reset all add-to-cart buttons since cart is now empty
+  document.querySelectorAll('.add-btn.in-cart').forEach(btn => {
+    btn.textContent = '🛒 Add to Cart';
+    btn.classList.remove('in-cart');
+  });
 
   // ── UPI: redirect to payment page ──
   if (isUPI) {
@@ -855,7 +900,12 @@ document.addEventListener('DOMContentLoaded', () => {
         );
         document.getElementById('sectionTitle').textContent = `Search results for "${e.target.value}"`;
         renderProducts(filtered);
-        document.getElementById('productsSection')?.scrollIntoView({ behavior: 'smooth' });
+        // Only scroll if user is above the products section
+        const section = document.getElementById('productsSection');
+        if (section) {
+          const rect = section.getBoundingClientRect();
+          if (rect.top > window.innerHeight) section.scrollIntoView({ behavior: 'smooth' });
+        }
       }, 280);
     });
 
@@ -889,17 +939,26 @@ function clearSearch() {
 // =======================
 // Modal Helpers
 // =======================
+let _openModalCount = 0;
+
 function openModal(id) {
   const el = document.getElementById(id);
-  if (el) { el.classList.add('open'); el.style.display = 'flex'; }
+  if (el && !el.classList.contains('open')) {
+    el.classList.add('open');
+    el.style.display = 'flex';
+    _openModalCount++;
+  }
   document.body.style.overflow = 'hidden';
 }
 
 function closeModal(id) {
   const el = document.getElementById(id);
-  if (el) { el.classList.remove('open'); el.style.display = 'none'; }
-  const anyOpen = document.querySelector('.modal-overlay.open');
-  if (!anyOpen) document.body.style.overflow = '';
+  if (el && el.classList.contains('open')) {
+    el.classList.remove('open');
+    el.style.display = 'none';
+    _openModalCount = Math.max(0, _openModalCount - 1);
+  }
+  if (_openModalCount === 0) document.body.style.overflow = '';
 }
 
 function handleOverlayClick(e, modalId, closeFn) {
@@ -920,11 +979,14 @@ function showNotification(message, type = 'default') {
   notif.style.bottom = (24 + (_notifStack - 1) * 60) + 'px';
   document.body.appendChild(notif);
 
+  let dismissed = false;
   const dismiss = () => {
+    if (dismissed) return;
+    dismissed = true;
     notif.style.opacity = '0';
     notif.style.transform = 'translateX(100%)';
-    notif.style.transition = 'all 0.35s ease';
-    setTimeout(() => { notif.remove(); _notifStack = Math.max(0, _notifStack - 1); }, 350);
+    notif.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+    setTimeout(() => { notif.remove(); _notifStack = Math.max(0, _notifStack - 1); }, 300);
   };
 
   // Dismiss on click
