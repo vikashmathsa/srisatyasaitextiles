@@ -52,11 +52,9 @@ function loadLiveProducts(forceRefresh = false) {
 function initHeroSlider() {
   const slides = document.querySelectorAll('.hero-slide');
   const dotsContainer = document.getElementById('heroDots');
-
-  if (!slides.length || !dotsContainer) return;
+  if (!dotsContainer) return;
 
   dotsContainer.innerHTML = '';
-
   slides.forEach((_, i) => {
     const dot = document.createElement('div');
     dot.className = `hero-dot ${i === 0 ? 'active' : ''}`;
@@ -65,60 +63,34 @@ function initHeroSlider() {
   });
 
   startSlideTimer();
-
-  // Pause autoplay while tab inactive
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
-      clearInterval(slideTimer);
-    } else {
-      startSlideTimer();
-    }
-  });
-
-  enableHeroSwipe();
 }
 
 function startSlideTimer() {
   clearInterval(slideTimer);
-  slideTimer = setInterval(() => changeSlide(1), 5000);
+  slideTimer = setInterval(() => changeSlide(1, false), 5000);
 }
 
 function changeSlide(dir, resetTimer = false) {
   const slides = document.querySelectorAll('.hero-slide');
   const dots = document.querySelectorAll('.hero-dot');
-
-  if (!slides.length) return;
-
-  slides[currentSlide]?.classList.remove('active');
+  slides[currentSlide].classList.remove('active');
   dots[currentSlide]?.classList.remove('active');
 
-  currentSlide =
-    (currentSlide + dir + slides.length) %
-    slides.length;
-
-  slides[currentSlide]?.classList.add('active');
+  currentSlide = (currentSlide + dir + slides.length) % slides.length;
+  slides[currentSlide].classList.add('active');
   dots[currentSlide]?.classList.add('active');
-
-  if (resetTimer) {
-    startSlideTimer();
-  }
+  if (resetTimer) startSlideTimer();
 }
 
 function goToSlide(i) {
   const slides = document.querySelectorAll('.hero-slide');
   const dots = document.querySelectorAll('.hero-dot');
-
-  if (!slides.length) return;
-
-  slides[currentSlide]?.classList.remove('active');
+  slides[currentSlide].classList.remove('active');
   dots[currentSlide]?.classList.remove('active');
-
   currentSlide = i;
-
-  slides[currentSlide]?.classList.add('active');
+  slides[currentSlide].classList.add('active');
   dots[currentSlide]?.classList.add('active');
-
-  startSlideTimer();
+  startSlideTimer(); // reset on manual nav
 }
 
 // =======================
@@ -1051,97 +1023,38 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-/* =======================
-   Mobile Swipe Support
-======================= */
-function enableHeroSwipe() {
-
-  const hero = document.querySelector('.hero');
-  if (!hero) return;
-
-  let startX = 0;
-  let endX = 0;
-
-  hero.addEventListener(
-    'touchstart',
-    (e) => {
-      startX = e.touches[0].clientX;
-    },
-    { passive: true }
-  );
-
-  hero.addEventListener(
-    'touchend',
-    (e) => {
-      endX = e.changedTouches[0].clientX;
-
-      const distance = startX - endX;
-
-      if (distance > 50) {
-        changeSlide(1, true);
-      }
-
-      if (distance < -50) {
-        changeSlide(-1, true);
-      }
-    },
-    { passive: true }
-  );
+// =======================
+// Mobile Bottom Nav Sync
+// =======================
+function syncMobileNav() {
+  // Cart badge
+  const cartCount = cart.reduce((t, i) => t + i.qty, 0);
+  const mobCart = document.getElementById('mob-cart-count');
+  if (mobCart) {
+    mobCart.textContent = cartCount;
+    mobCart.style.display = cartCount > 0 ? 'flex' : 'none';
+  }
+  // Wishlist badge
+  const mobWishlist = document.getElementById('mob-wishlist-count');
+  if (mobWishlist) {
+    mobWishlist.textContent = wishlist.length;
+    mobWishlist.style.display = wishlist.length > 0 ? 'flex' : 'none';
+  }
+  // User label
+  const mobUser = document.getElementById('mob-user-label');
+  if (mobUser) {
+    const user = typeof firebaseAuth !== 'undefined' && firebaseAuth ? firebaseAuth.getCurrentUser() : null;
+    mobUser.textContent = user ? (user.name?.split(' ')[0] || 'Me') : 'Account';
+  }
 }
 
-/* =======================
-   Better Modal UX Mobile
-======================= */
-function lockBodyScroll() {
-  document.body.style.overflow = 'hidden';
+// Patch updateCartCount to also sync mobile nav
+const _origUpdateCartCount = typeof updateCartCount === 'function' ? updateCartCount : null;
+function updateCartCount() {
+  if (_origUpdateCartCount) _origUpdateCartCount();
+  syncMobileNav();
 }
 
-function unlockBodyScroll() {
-  document.body.style.overflow = '';
-}
-
-function openModal(id) {
-  const modal = document.getElementById(id);
-
-  if (!modal) return;
-
-  modal.classList.add('active');
-  lockBodyScroll();
-}
-
-function closeModal(id) {
-  const modal = document.getElementById(id);
-
-  if (!modal) return;
-
-  modal.classList.remove('active');
-  unlockBodyScroll();
-}
-
-/* =======================
-   Responsive Helpers
-======================= */
-
-window.addEventListener(
-  'resize',
-  debounce(() => {
-
-    if (window.innerWidth > 768) {
-      document.body.style.overflow = '';
-    }
-
-  }, 150)
-);
-
-function debounce(func, wait = 100) {
-  let timeout;
-
-  return (...args) => {
-    clearTimeout(timeout);
-
-    timeout = setTimeout(() => {
-      func(...args);
-    }, wait);
-  };
-}
-
+// Run sync on DOM ready
+document.addEventListener('DOMContentLoaded', syncMobileNav);
+window.addEventListener('firebaseReady', syncMobileNav);
