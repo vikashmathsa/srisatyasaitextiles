@@ -512,74 +512,6 @@ header {
 /* ================================
    CATEGORY CARDS
 ================================ */
-.category-cards-section {
-  padding: 40px 5% 24px;
-}
-
-.category-cards {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 18px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.cat-card {
-  background: var(--card-bg);
-  border-radius: var(--radius-lg);
-  padding: 30px 20px;
-  text-align: center;
-  cursor: pointer;
-  transition: var(--transition);
-  border: 2px solid var(--border);
-  box-shadow: var(--shadow-card);
-  position: relative;
-  overflow: hidden;
-}
-
-.cat-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(29,78,216,0.06), transparent);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.cat-card:hover {
-  border-color: var(--blue);
-  transform: translateY(-6px);
-  box-shadow: 0 16px 40px rgba(29,78,216,0.15);
-}
-
-.cat-card:hover::before { opacity: 1; }
-
-.cat-emoji {
-  font-size: 42px;
-  margin-bottom: 12px;
-  display: block;
-  transition: transform 0.3s ease;
-}
-
-.cat-card:hover .cat-emoji { transform: scale(1.15); }
-
-.cat-name {
-  font-family: var(--font-display);
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--dark);
-  margin-bottom: 5px;
-}
-
-.cat-count {
-  font-size: 12px;
-  color: var(--muted);
-  font-weight: 500;
-  background: var(--bg);
-  display: inline-block;
-  padding: 2px 10px;
-  border-radius: 20px;
-}
 
 /* ================================
    TRUST STRIP
@@ -1735,7 +1667,6 @@ body.dark-mode .footer-logo { color: #f1f5f9; }
 ================================ */
 @media (max-width: 1024px) {
   .footer-inner { grid-template-columns: 1fr 1fr; }
-  .category-cards { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 768px) {
@@ -1749,7 +1680,6 @@ body.dark-mode .footer-logo { color: #f1f5f9; }
   .hero { height: 420px; }
   .hero-content h1 { font-size: 32px; }
 
-  .category-cards { grid-template-columns: repeat(2, 1fr); gap: 12px; }
 
   .trust-strip { gap: 8px; }
   .trust-item { padding: 4px 10px; font-size: 12px; border-right: none; }
@@ -1776,7 +1706,6 @@ body.dark-mode .footer-logo { color: #f1f5f9; }
   .hero-btns { flex-direction: column; align-items: center; }
   .products { grid-template-columns: repeat(2, 1fr); gap: 12px; }
   .product-card img { height: 180px; }
-  .category-cards { grid-template-columns: repeat(2, 1fr); gap: 10px; }
   .cart-drawer { max-width: 100%; }
   .footer-inner { grid-template-columns: 1fr; }
   .theme-toggle { width: 36px; height: 36px; font-size: 16px; }
