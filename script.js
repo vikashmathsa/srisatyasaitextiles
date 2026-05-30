@@ -25,7 +25,7 @@ function loadLiveProducts() {
     return;
   }
   const db = firebase.firestore();
-  db.collection('products').onSnapshot(snap => {
+  db.collection('products').get().then(snap => {
     if (snap.empty) {
       // No products in Firestore yet — fall back to static array
       liveProducts = [...products];
@@ -37,7 +37,7 @@ function loadLiveProducts() {
     updateCategoryCards();
     updateWishlistUI();
     updateCartCount();
-  }, err => {
+  }).catch(err => {
     console.warn('Firestore load failed, using static catalogue:', err);
     liveProducts = [...products];
     renderCategories();
