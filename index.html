@@ -413,7 +413,7 @@ window.addEventListener('scroll', () => {
     if (window.scrollY > 400) btn.classList.add('visible');
     else btn.classList.remove('visible');
   }
-});
+}, { passive: true });
 </script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
