@@ -7,7 +7,7 @@ let currentCategory = "All";
 let currentSlide = 0;
 let slideTimer = null;
 
-// Live product catalogue — loaded from Firestore, falls back to static products.js array
+// Live product catalogue — loaded from Firestore
 let liveProducts = [];
 
 const categories = ["All", "Men", "Women", "Kids", "Home"];
@@ -16,33 +16,18 @@ const categories = ["All", "Men", "Women", "Kids", "Home"];
 // Firestore Product Loader
 // =======================
 function loadLiveProducts() {
-  if (typeof firebase === 'undefined' || !firebase.apps.length) {
-    // Firebase not ready yet — use static array
-    liveProducts = [...products];
-    renderCategories();
-    renderProducts();
-    updateCategoryCards();
-    return;
-  }
   const db = firebase.firestore();
   db.collection('products').get().then(snap => {
-    if (snap.empty) {
-      // No products in Firestore yet — fall back to static array
-      liveProducts = [...products];
-    } else {
-      liveProducts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    }
+    liveProducts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
     renderCategories();
     renderProducts();
     updateCategoryCards();
     updateWishlistUI();
     updateCartCount();
   }).catch(err => {
-    console.warn('Firestore load failed, using static catalogue:', err);
-    liveProducts = [...products];
+    console.warn('Firestore load failed:', err);
     renderCategories();
     renderProducts();
-    updateCategoryCards();
   });
 }
 
@@ -294,7 +279,7 @@ function renderCategories() {
 // Dynamic Category Card Counts
 // =======================
 function updateCategoryCards() {
-  const catalogue = (typeof liveProducts !== 'undefined' && liveProducts.length > 0) ? liveProducts : (typeof products !== 'undefined' ? products : []);
+  const catalogue = liveProducts;
   const catMap = { Men: 0, Women: 0, Kids: 0, Home: 0 };
 
   catalogue.forEach(p => {
@@ -344,7 +329,7 @@ function renderProducts(filteredProducts = null) {
   const noResults = document.getElementById('noResults');
   container.innerHTML = '';
 
-  const catalogue = (typeof liveProducts !== 'undefined' && liveProducts.length > 0) ? liveProducts : products;
+  const catalogue = liveProducts;
   let list = filteredProducts ||
     (currentCategory === 'All' ? [...catalogue] : catalogue.filter(p => p.category === currentCategory));
 
@@ -415,7 +400,7 @@ function updateWishlistUI() {
 }
 
 function toggleWishlist(productId) {
-  const catalogue = (typeof liveProducts !== 'undefined' && liveProducts.length > 0) ? liveProducts : products;
+  const catalogue = liveProducts;
   const idx = wishlist.findIndex(item => item.id === productId);
   const product = catalogue.find(p => p.id === productId);
 
@@ -496,7 +481,7 @@ function selectSize(btn, productId) {
 // Cart
 // =======================
 function addToCart(productId) {
-  const catalogue = (typeof liveProducts !== 'undefined' && liveProducts.length > 0) ? liveProducts : products;
+  const catalogue = liveProducts;
   const product = catalogue.find(p => p.id === productId);
   if (!product || !product.stock) return;
 
@@ -774,7 +759,7 @@ function placeOrder() {
 // Quick View (with image gallery)
 // =======================
 function openQuickView(productId) {
-  const catalogue = (typeof liveProducts !== 'undefined' && liveProducts.length > 0) ? liveProducts : products;
+  const catalogue = liveProducts;
   const product = catalogue.find(p => p.id === productId);
   if (!product) return;
   const discount = Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100);
@@ -863,7 +848,7 @@ document.addEventListener('DOMContentLoaded', () => {
       clearTimeout(searchTimer);
       searchTimer = setTimeout(() => {
         if (!term) { renderProducts(); return; }
-        const catalogue = (typeof liveProducts !== 'undefined' && liveProducts.length > 0) ? liveProducts : products;
+        const catalogue = liveProducts;
         const filtered = catalogue.filter(p =>
           p.name.toLowerCase().includes(term) ||
           p.category.toLowerCase().includes(term)
@@ -880,7 +865,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Initialize everything — load products from Firestore (with static fallback)
+  // Initialize everything — load products from Firestore
   renderCategories();
   loadLiveProducts();
   updateCartCount();
@@ -955,10 +940,8 @@ window.addEventListener('scroll', () => {
   const header = document.getElementById('mainHeader');
   if (header) {
     if (window.scrollY > 10) {
-      header.style.boxShadow = '0 4px 24px rgba(0,0,0,0.14)';
       header.classList.add('scrolled');
     } else {
-      header.style.boxShadow = '0 2px 12px rgba(0,0,0,0.08)';
       header.classList.remove('scrolled');
     }
   }
