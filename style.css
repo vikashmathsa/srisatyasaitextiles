@@ -46,15 +46,15 @@
   --radius-lg: 20px;
   --font-display: 'Playfair Display', Georgia, serif;
   --font-body: 'DM Sans', system-ui, sans-serif;
-  --transition: all 0.25s ease;
+  --transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
 
   /* ── Glassmorphism – Light ── */
-  --glass-bg:        rgba(255, 255, 255, 0.55);
-  --glass-bg-strong: rgba(255, 255, 255, 0.75);
+  --glass-bg:        rgba(255, 255, 255, 0.75);
+  --glass-bg-strong: rgba(255, 255, 255, 0.92);
   --glass-border:    rgba(255, 255, 255, 0.7);
   --glass-shadow:    0 8px 32px rgba(15, 23, 42, 0.12);
-  --glass-blur:      blur(18px);
-  --glass-blur-sm:   blur(10px);
+  --glass-blur:      blur(8px);
+  --glass-blur-sm:   blur(4px);
   --body-bg-light:   linear-gradient(135deg, #dbeafe 0%, #f0f9ff 35%, #e0f2fe 65%, #ede9fe 100%);
 }
 
@@ -94,12 +94,12 @@ body.dark-mode {
   --shadow-card: 0 2px 12px rgba(0,0,0,0.4);
 
   /* ── Glassmorphism – Dark ── */
-  --glass-bg:        rgba(15, 25, 50, 0.55);
-  --glass-bg-strong: rgba(13, 21, 38, 0.78);
+  --glass-bg:        rgba(15, 25, 50, 0.82);
+  --glass-bg-strong: rgba(13, 21, 38, 0.94);
   --glass-border:    rgba(255, 255, 255, 0.08);
   --glass-shadow:    0 8px 32px rgba(0, 0, 0, 0.45);
-  --glass-blur:      blur(18px);
-  --glass-blur-sm:   blur(10px);
+  --glass-blur:      blur(8px);
+  --glass-blur-sm:   blur(4px);
   --body-bg-light:   linear-gradient(135deg, #040d1c 0%, #0b1530 35%, #0a1628 65%, #090f22 100%);
 }
 
@@ -135,6 +135,10 @@ body.dark-mode::before {
     radial-gradient(ellipse 700px 500px at 15% 20%,  rgba(30,64,175,0.25)  0%, transparent 70%),
     radial-gradient(ellipse 600px 400px at 85% 75%,  rgba(109,40,217,0.18) 0%, transparent 70%),
     radial-gradient(ellipse 500px 600px at 60% 10%,  rgba(6,182,212,0.12)  0%, transparent 70%);
+}
+
+header.scrolled {
+  box-shadow: 0 4px 24px rgba(0,0,0,0.14);
 }
 
 /* All page content must sit above the blobs */
@@ -429,7 +433,7 @@ header {
 .hero-badge {
   display: inline-block;
   background: rgba(255,255,255,0.15);
-  backdrop-filter: blur(16px);
+  backdrop-filter: blur(6px);
   border: 1px solid rgba(255,255,255,0.4);
   padding: 8px 22px;
   border-radius: 50px;
@@ -571,9 +575,7 @@ header {
   display: flex;
   justify-content: center;
   gap: 0;
-  background: rgba(30,58,138,0.72);
-  backdrop-filter: var(--glass-blur-sm);
-  -webkit-backdrop-filter: var(--glass-blur-sm);
+  background: rgba(30,58,138,0.85);
   padding: 14px 5%;
   flex-wrap: wrap;
   border-top: 1px solid rgba(255,255,255,0.08);
@@ -665,20 +667,22 @@ body.dark-mode .trust-strip {
 ================================ */
 .product-card {
   background: var(--glass-bg);
-  backdrop-filter: var(--glass-blur-sm);
-  -webkit-backdrop-filter: var(--glass-blur-sm);
   border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: var(--glass-shadow);
   transition: var(--transition);
   position: relative;
   border: 1px solid var(--glass-border);
-  animation: cardFadeIn 0.4s ease both;
+  contain: layout style;
 }
 
 @keyframes cardFadeIn {
   from { opacity: 0; transform: translateY(16px); }
   to   { opacity: 1; transform: translateY(0); }
+}
+
+.product-card.animate-in {
+  animation: cardFadeIn 0.3s ease both;
 }
 
 .product-card:hover {
@@ -724,7 +728,7 @@ body.dark-mode .product-card:hover {
 .out-of-stock-badge {
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,0.45);
+  background: rgba(0,0,0,0.5);
   color: white;
   font-weight: 700;
   font-size: 14px;
@@ -733,7 +737,6 @@ body.dark-mode .product-card:hover {
   justify-content: center;
   z-index: 3;
   letter-spacing: 0.05em;
-  backdrop-filter: blur(2px);
 }
 
 .card-actions {
@@ -903,8 +906,8 @@ body.dark-mode .product-card:hover {
   z-index: 1000;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(14px) saturate(1.4);
-  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   animation: fadeIn 0.25s ease;
 }
 
@@ -987,8 +990,6 @@ body.dark-mode .product-card:hover {
   outline: none;
   transition: var(--transition);
   background: var(--glass-bg);
-  backdrop-filter: var(--glass-blur-sm);
-  -webkit-backdrop-filter: var(--glass-blur-sm);
   color: var(--dark);
 }
 
@@ -1290,8 +1291,6 @@ body.dark-mode .product-card:hover {
   gap: 8px;
   overflow-y: auto;
   background: var(--glass-bg-strong);
-  backdrop-filter: var(--glass-blur-sm);
-  -webkit-backdrop-filter: var(--glass-blur-sm);
   border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
 }
 
@@ -1383,7 +1382,6 @@ body.dark-mode .product-card:hover {
   box-shadow: 0 12px 32px rgba(0,0,0,0.3);
   animation: notifIn 0.35s cubic-bezier(0.34,1.56,0.64,1);
   max-width: 320px;
-  backdrop-filter: blur(12px);
   border-left: 4px solid rgba(255,255,255,0.3);
 }
 
