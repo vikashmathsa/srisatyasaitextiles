@@ -333,7 +333,7 @@
         </div>
         <!-- ✅ About Admin link in footer -->
         <a href="about-admin.html" class="footer-about-link">
-          👨‍💻 About Admin
+          👨‍💻 About the Admin
         </a>
       </div>
       <div class="footer-links">
@@ -388,6 +388,18 @@ function applyTheme(dark) {
 
 function toggleTheme() {
   const isDark = document.body.classList.contains('dark-mode');
+  // Brief "flash" overlay for a polished glass transition
+  const flash = document.createElement('div');
+  flash.style.cssText = `
+    position:fixed; inset:0; z-index:99999; pointer-events:none;
+    background:${isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,5,20,0.08)'};
+    transition: opacity 0.5s ease; opacity:1;
+  `;
+  document.body.appendChild(flash);
+  requestAnimationFrame(() => {
+    flash.style.opacity = '0';
+    setTimeout(() => flash.remove(), 500);
+  });
   localStorage.setItem('sstTheme', isDark ? 'light' : 'dark');
   applyTheme(!isDark);
 }
