@@ -12,17 +12,19 @@ let wishlist = (() => {
     return ids; // temporarily stores IDs; swapped to full objects post-load
   } catch { return []; }
 })();
-let currentCategory = "All";
+let currentCategory = "Men";
 let currentSlide = 0;
 let slideTimer = null;
 
 // Live product catalogue — loaded from Firestore
 let liveProducts = [];
 
-const categories = ["All", "Men", "Women", "Kids", "Home", "Daily Wear"];
+const categories = ["Men", "Women", "Kids", "Home", "Daily Wear"];
 
 // Sub-category state for Daily Wear ('' = all daily wear, 'Men' or 'Women' for sub-filter)
 let currentDailySubCat = '';
+// Sub-category state for Men ('' = all men, 'T-Shirts', 'Shirts', 'Pants')
+let currentMenSubCat = '';
 
 // =======================
 // Firestore Product Loader
@@ -303,9 +305,7 @@ function renderCategories() {
     const link = document.createElement('a');
     link.className = `category-link ${cat === currentCategory ? 'active' : ''}`;
 
-    if (cat === 'All') {
-      link.textContent = 'All Products';
-    } else if (cat === 'Daily Wear') {
+    if (cat === 'Daily Wear') {
       link.textContent = '👕 Daily Wear';
       link.className += ' daily-wear-link';
     } else {
@@ -315,6 +315,30 @@ function renderCategories() {
     link.onclick = () => filterCategory(cat);
     container.appendChild(link);
   });
+
+  // Render Men sub-nav if Men category is active
+  const menSubNav = document.getElementById('menSubNav');
+  if (currentCategory === 'Men') {
+    if (!menSubNav) {
+      const sub = document.createElement('div');
+      sub.id = 'menSubNav';
+      sub.className = 'daily-wear-subnav';
+      sub.innerHTML = `
+        <a class="subnav-link ${currentMenSubCat === '' ? 'active' : ''}" onclick="filterMen('')">All Men's</a>
+        <a class="subnav-link ${currentMenSubCat === 'T-Shirts' ? 'active' : ''}" onclick="filterMen('T-Shirts')">👕 T-Shirts</a>
+        <a class="subnav-link ${currentMenSubCat === 'Shirts' ? 'active' : ''}" onclick="filterMen('Shirts')">👔 Shirts</a>
+        <a class="subnav-link ${currentMenSubCat === 'Pants' ? 'active' : ''}" onclick="filterMen('Pants')">👖 Pants</a>
+      `;
+      container.insertAdjacentElement('afterend', sub);
+    } else {
+      menSubNav.querySelectorAll('.subnav-link').forEach((a, idx) => {
+        const vals = ['', 'T-Shirts', 'Shirts', 'Pants'];
+        a.className = `subnav-link ${currentMenSubCat === vals[idx] ? 'active' : ''}`;
+      });
+    }
+  } else {
+    if (menSubNav) menSubNav.remove();
+  }
 
   // Render Daily Wear sub-nav if that category is active
   const subNav = document.getElementById('dailyWearSubNav');
@@ -372,13 +396,14 @@ function updateCategoryCards() {
 
 function filterCategory(category) {
   currentCategory = category;
-  // Reset daily sub-cat whenever switching top-level category
+  // Reset sub-cats whenever switching top-level category
   if (category !== 'Daily Wear') currentDailySubCat = '';
+  if (category !== 'Men') currentMenSubCat = '';
   renderCategories();
-  if (category === 'All') {
-    document.getElementById('sectionTitle').textContent = 'All Products';
-  } else if (category === 'Daily Wear') {
+  if (category === 'Daily Wear') {
     document.getElementById('sectionTitle').textContent = 'Daily Wear Collection';
+  } else if (category === 'Men') {
+    document.getElementById('sectionTitle').textContent = "Men's Collection";
   } else {
     document.getElementById('sectionTitle').textContent = category + ' Collection';
   }
@@ -394,6 +419,18 @@ function filterDailyWear(subCat) {
     document.getElementById('sectionTitle').textContent = 'Daily Wear Collection';
   } else {
     document.getElementById('sectionTitle').textContent = subCat + "'s Daily Wear";
+  }
+  document.getElementById('sortSelect').value = 'default';
+  renderProducts();
+}
+
+function filterMen(subCat) {
+  currentMenSubCat = subCat;
+  renderCategories();
+  if (subCat === '') {
+    document.getElementById('sectionTitle').textContent = "Men's Collection";
+  } else {
+    document.getElementById('sectionTitle').textContent = "Men's " + subCat;
   }
   document.getElementById('sortSelect').value = 'default';
   renderProducts();
@@ -423,8 +460,12 @@ function renderProducts(filteredProducts = null) {
   let list;
   if (filteredProducts) {
     list = filteredProducts;
-  } else if (currentCategory === 'All') {
-    list = [...catalogue];
+  } else if (currentCategory === 'Men') {
+    if (currentMenSubCat === '') {
+      list = catalogue.filter(p => p.category === 'Men' || p.category === 'Men - T-Shirts' || p.category === 'Men - Shirts' || p.category === 'Men - Pants');
+    } else {
+      list = catalogue.filter(p => p.category === 'Men - ' + currentMenSubCat || p.category === 'Men');
+    }
   } else if (currentCategory === 'Daily Wear') {
     if (currentDailySubCat === '') {
       // Show all daily wear products (both sub-cats)
@@ -1030,7 +1071,9 @@ function clearSearch() {
   if (input) input.value = '';
   if (clearBtn) clearBtn.style.display = 'none';
   document.getElementById('sectionTitle').textContent =
-    currentCategory === 'All' ? 'All Products' : currentCategory + ' Collection';
+    currentCategory === 'Daily Wear' ? 'Daily Wear Collection' :
+    currentCategory === 'Men' ? "Men's Collection" :
+    currentCategory + ' Collection';
   renderProducts();
 }
 
