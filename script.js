@@ -12,14 +12,14 @@ let wishlist = (() => {
     return ids; // temporarily stores IDs; swapped to full objects post-load
   } catch { return []; }
 })();
-let currentCategory = "All";
+let currentCategory = "Men";
 let currentSlide = 0;
 let slideTimer = null;
 
 // Live product catalogue — loaded from Firestore
 let liveProducts = [];
 
-const categories = ["All", "Men", "Women", "Kids", "Home", "Daily Wear"];
+const categories = ["Men", "Women", "Kids", "Home", "Daily Wear"];
 
 // Sub-category state for Daily Wear ('' = all daily wear, 'Men' or 'Women' for sub-filter)
 let currentDailySubCat = '';
@@ -297,15 +297,14 @@ function updateUserUI() {
 function renderCategories() {
   const container = document.getElementById('categories');
   if (!container) return;
-  container.innerHTML = '';
+
+  const frag = document.createDocumentFragment();
 
   categories.forEach(cat => {
     const link = document.createElement('a');
     link.className = `category-link ${cat === currentCategory ? 'active' : ''}`;
 
-    if (cat === 'All') {
-      link.textContent = 'All Products';
-    } else if (cat === 'Daily Wear') {
+    if (cat === 'Daily Wear') {
       link.textContent = '👕 Daily Wear';
       link.className += ' daily-wear-link';
     } else {
@@ -313,8 +312,11 @@ function renderCategories() {
     }
 
     link.onclick = () => filterCategory(cat);
-    container.appendChild(link);
+    frag.appendChild(link);
   });
+
+  container.innerHTML = '';
+  container.appendChild(frag);
 
   // Render Daily Wear sub-nav if that category is active
   const subNav = document.getElementById('dailyWearSubNav');
@@ -375,9 +377,7 @@ function filterCategory(category) {
   // Reset daily sub-cat whenever switching top-level category
   if (category !== 'Daily Wear') currentDailySubCat = '';
   renderCategories();
-  if (category === 'All') {
-    document.getElementById('sectionTitle').textContent = 'All Products';
-  } else if (category === 'Daily Wear') {
+  if (category === 'Daily Wear') {
     document.getElementById('sectionTitle').textContent = 'Daily Wear Collection';
   } else {
     document.getElementById('sectionTitle').textContent = category + ' Collection';
@@ -423,14 +423,10 @@ function renderProducts(filteredProducts = null) {
   let list;
   if (filteredProducts) {
     list = filteredProducts;
-  } else if (currentCategory === 'All') {
-    list = [...catalogue];
   } else if (currentCategory === 'Daily Wear') {
     if (currentDailySubCat === '') {
-      // Show all daily wear products (both sub-cats)
       list = catalogue.filter(p => p.category === 'Daily Wear' || p.category === 'Daily Wear - Men' || p.category === 'Daily Wear - Women');
     } else {
-      // Show specific sub-category
       list = catalogue.filter(p => p.category === 'Daily Wear - ' + currentDailySubCat || p.category === 'Daily Wear');
     }
   } else {
@@ -452,6 +448,7 @@ function renderProducts(filteredProducts = null) {
   const animate = _productsFirstLoad || filteredProducts !== null;
   _productsFirstLoad = false;
 
+  const frag = document.createDocumentFragment();
   list.forEach((product, i) => {
     const discount = Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100);
     const savings = product.oldPrice - product.price;
@@ -464,7 +461,7 @@ function renderProducts(filteredProducts = null) {
     if (animate) card.style.animationDelay = `${i * 0.02}s`;
     card.innerHTML = `
       <div class="product-img-wrap">
-        <img src="${product.img}" alt="${product.name}" loading="lazy">
+        <img src="${product.img}" alt="${product.name}" loading="lazy" decoding="async">
         ${!product.stock ? '<div class="out-of-stock-badge">Out of Stock</div>' : ''}
         <div class="discount-badge">${discount}% OFF</div>
         <div class="card-actions">
@@ -496,8 +493,9 @@ function renderProducts(filteredProducts = null) {
         </button>
       </div>
     `;
-    container.appendChild(card);
+    frag.appendChild(card);
   });
+  container.appendChild(frag);
 }
 
 // =======================
@@ -1030,7 +1028,7 @@ function clearSearch() {
   if (input) input.value = '';
   if (clearBtn) clearBtn.style.display = 'none';
   document.getElementById('sectionTitle').textContent =
-    currentCategory === 'All' ? 'All Products' : currentCategory + ' Collection';
+    currentCategory === 'Daily Wear' ? 'Daily Wear Collection' : currentCategory + ' Collection';
   renderProducts();
 }
 
@@ -1096,15 +1094,20 @@ function showNotification(message, type = 'default') {
 // =======================
 // Sticky Header
 // =======================
+// =======================
+// Sticky Header + Scroll Top — single throttled listener
+// =======================
+let _scrollRaf = null;
 window.addEventListener('scroll', () => {
-  const header = document.getElementById('mainHeader');
-  if (header) {
-    if (window.scrollY > 10) {
-      header.classList.add('scrolled');
-    } else {
-      header.classList.remove('scrolled');
-    }
-  }
+  if (_scrollRaf) return;
+  _scrollRaf = requestAnimationFrame(() => {
+    _scrollRaf = null;
+    const y = window.scrollY;
+    const header = document.getElementById('mainHeader');
+    if (header) header.classList.toggle('scrolled', y > 10);
+    const btn = document.getElementById('scrollTopBtn');
+    if (btn) btn.classList.toggle('visible', y > 400);
+  });
 }, { passive: true });
 // =======================
 // Keyboard Accessibility

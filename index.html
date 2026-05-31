@@ -140,7 +140,7 @@
   <!-- Products Section -->
   <section class="section" id="productsSection">
     <div class="section-header">
-      <h2 class="section-title" id="sectionTitle">All Products</h2>
+      <h2 class="section-title" id="sectionTitle">Our Collection</h2>
       <div class="sort-bar">
         <select id="sortSelect" onchange="sortProducts()">
           <option value="default">Sort By</option>
@@ -155,7 +155,7 @@
       <div class="no-results-icon">🔍</div>
       <h3>No products found</h3>
       <p>Try a different search term or browse all categories</p>
-      <button onclick="clearSearch(); filterCategory('All')">🔄 Show All Products</button>
+      <button onclick="clearSearch(); renderProducts()">🔄 Show All Products</button>
     </div>
   </section>
 
@@ -346,7 +346,7 @@
       <span class="mobile-nav-icon">🏠</span>
       <span>Home</span>
     </button>
-    <button class="mobile-nav-item" onclick="filterCategory('All'); scrollToProducts()" title="Shop">
+    <button class="mobile-nav-item" onclick="scrollToProducts()" title="Shop">
       <span class="mobile-nav-icon">🛍️</span>
       <span>Shop</span>
     </button>
@@ -410,15 +410,8 @@ function toggleTheme() {
 })();
 
 // ========================
-// Scroll To Top
+// Scroll To Top — handled by script.js combined listener
 // ========================
-window.addEventListener('scroll', () => {
-  const btn = document.getElementById('scrollTopBtn');
-  if (btn) {
-    if (window.scrollY > 400) btn.classList.add('visible');
-    else btn.classList.remove('visible');
-  }
-}, { passive: true });
 </script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
