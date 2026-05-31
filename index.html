@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="te">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -40,23 +40,6 @@
       object-fit: cover; border: 1.5px solid rgba(15,23,42,0.25);
       flex-shrink: 0;
     }
-    /* Footer about-admin link */
-    .footer-about-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      margin-top: 10px;
-      padding: 7px 14px;
-      background: rgba(240,180,41,0.1);
-      border: 1px solid rgba(240,180,41,0.3);
-      border-radius: 8px;
-      color: #f0b429;
-      font-size: 13px;
-      font-weight: 600;
-      text-decoration: none;
-      transition: background 0.2s;
-    }
-    .footer-about-link:hover { background: rgba(240,180,41,0.18); }
   </style>
 </head>
 <body>
@@ -128,8 +111,8 @@
       </div>
     </div>
     <div class="hero-dots" id="heroDots"></div>
-    <button class="hero-nav prev" onclick="changeSlide(-1)">‹</button>
-    <button class="hero-nav next" onclick="changeSlide(1)">›</button>
+    <button class="hero-nav prev" onclick="changeSlide(-1, true)">‹</button>
+    <button class="hero-nav next" onclick="changeSlide(1, true)">›</button>
   </section>
 
   <!-- Category Cards -->
@@ -294,7 +277,7 @@
         </div>
       </div>
       <div class="order-summary-mini" id="orderSummaryMini"></div>
-      <button type="button" class="btn-full success" onclick="placeOrder(event)">🎉 Confirm &amp; Place Order</button>
+      <button type="button" class="btn-full success" onclick="placeOrder()">🎉 Confirm &amp; Place Order</button>
     </div>
   </div>
 
@@ -344,18 +327,6 @@
     <div class="footer-bottom">
       <p>© 2026 Sri Satya Sai Textiles. All Rights Reserved. | Made with ❤️ in Srikakulam by <a href="about-admin.html" style="color:#f0b429; text-decoration:none;">Vikash Mathsa</a></p>
     </div>
-		  <div class="top-bar">
-    <div class="top-bar-inner">
-      <span>🚚 Free Shipping on Orders Above ₹999</span>
-      <span aria-hidden="true">·</span>
-      <span>💳 COD Available</span>
-      <span aria-hidden="true">·</span>
-      <span>⚡ Fast Delivery Across AP &amp; Telangana</span>
-      <span aria-hidden="true">·</span>
-      <span>↩ 7-Day Easy Returns</span>
-    </div>
-  </div>
-
   </footer>
 
   <!-- Mobile Bottom Nav -->
@@ -386,8 +357,18 @@
   <button class="scroll-top-btn" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">↑</button>
 
   <!-- WhatsApp Float -->
-  <a href="https://wa.me/918919648679?text=Hi%2C%20I%27m%20interested%20in%20your%20products!" class="whatsapp-btn" target="_blank" title="Chat on WhatsApp">💬</a>
-
+  <a href="https://wa.me/918919648679?text=Hi%2C%20I%27m%20interested%20in%20your%20products!" class="whatsapp-btn" target="_blank" rel="noopener noreferrer" title="Chat on WhatsApp">💬</a>
+<div class="top-bar">
+    <div class="top-bar-inner">
+      <span>🚚 Free Shipping on Orders Above ₹999</span>
+      <span aria-hidden="true">·</span>
+      <span>💳 COD Available</span>
+      <span aria-hidden="true">·</span>
+      <span>⚡ Fast Delivery Across AP &amp; Telangana</span>
+      <span aria-hidden="true">·</span>
+      <span>↩ 7-Day Easy Returns</span>
+    </div>
+  </div>
 <script>
 // ========================
 // Dark / Light Mode Toggle

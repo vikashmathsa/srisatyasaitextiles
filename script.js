@@ -5,7 +5,13 @@
 let cart = (() => {
   try { return JSON.parse(localStorage.getItem('sstCart')) || []; } catch { return []; }
 })();
-let wishlist = [];
+let wishlist = (() => {
+  try {
+    const ids = JSON.parse(localStorage.getItem('sstWishlistIds')) || [];
+    // Full product objects restored after liveProducts loads (see loadLiveProducts)
+    return ids; // temporarily stores IDs; swapped to full objects post-load
+  } catch { return []; }
+})();
 let currentCategory = "All";
 let currentSlide = 0;
 let slideTimer = null;
@@ -34,6 +40,15 @@ function loadLiveProducts(forceRefresh = false) {
   db.collection('products').get().then(snap => {
     liveProducts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
     _productCacheTime = Date.now();
+    // Restore full wishlist objects from saved IDs
+    try {
+      const savedIds = JSON.parse(localStorage.getItem('sstWishlistIds')) || [];
+      if (savedIds.length && wishlist.length === savedIds.length) {
+        wishlist = savedIds
+          .map(id => liveProducts.find(p => p.id === id))
+          .filter(Boolean);
+      }
+    } catch {}
     renderCategories();
     renderProducts();
     updateCategoryCards();
@@ -354,7 +369,7 @@ function renderProducts(filteredProducts = null) {
   const sort = document.getElementById('sortSelect')?.value;
   if (sort === 'price-low') list.sort((a, b) => a.price - b.price);
   else if (sort === 'price-high') list.sort((a, b) => b.price - a.price);
-  else if (sort === 'discount') list.sort((a, b) => (b.oldPrice - b.price) / b.oldPrice - (a.oldPrice - a.price) / a.oldPrice);
+  else if (sort === 'discount') list.sort((a, b) => { const da = a.oldPrice > 0 ? (a.oldPrice - a.price) / a.oldPrice : 0; const db2 = b.oldPrice > 0 ? (b.oldPrice - b.price) / b.oldPrice : 0; return db2 - da; });
 
   if (list.length === 0) {
     noResults.style.display = 'block';
@@ -436,6 +451,7 @@ function toggleWishlist(productId) {
 
   updateWishlistCount();
   updateWishlistCardUI(productId);
+  try { localStorage.setItem('sstWishlistIds', JSON.stringify(wishlist.map(p => p.id))); } catch {}
 }
 
 // Update only the wishlist button on the specific product card
@@ -450,6 +466,12 @@ function updateWishlistCount() {
   if (!el) return;
   el.textContent = wishlist.length;
   el.style.display = wishlist.length > 0 ? 'flex' : 'none';
+  // Sync mobile bottom nav badge
+  const mobWlBadge = document.getElementById('mob-wishlist-count');
+  if (mobWlBadge) {
+    mobWlBadge.textContent = wishlist.length;
+    mobWlBadge.style.display = wishlist.length > 0 ? 'flex' : 'none';
+  }
 }
 
 function toggleWishlistModal() {
@@ -478,6 +500,7 @@ function renderWishlistItems() {
   wishlist.forEach(item => {
     const div = document.createElement('div');
     div.className = 'cart-item';
+    const itemIdAttr = typeof item.id === 'string' ? `'${item.id}'` : item.id;
     div.innerHTML = `
       <img src="${item.img}" alt="${item.name}">
       <div class="cart-item-info">
@@ -485,8 +508,8 @@ function renderWishlistItems() {
         <p class="price">₹${item.price.toLocaleString()}</p>
       </div>
       <div class="cart-item-controls">
-        <button class="add-btn" style="width:auto;padding:8px 14px;font-size:13px" onclick="addToCart(${item.id}); toggleWishlistModal()">Add to Cart</button>
-        <button class="remove-btn" onclick="toggleWishlist(${item.id}); renderWishlistItems()">Remove</button>
+        <button class="add-btn" style="width:auto;padding:8px 14px;font-size:13px" onclick="addToCart(${itemIdAttr}); toggleWishlistModal()">Add to Cart</button>
+        <button class="remove-btn" onclick="toggleWishlist(${itemIdAttr}); renderWishlistItems()">Remove</button>
       </div>
     `;
     container.appendChild(div);
@@ -551,6 +574,9 @@ function updateProductCardUI(productId) {
 function updateCartCount() {
   const total = cart.reduce((sum, item) => sum + item.quantity, 0);
   document.getElementById('cart-count').textContent = total;
+  // Sync mobile bottom nav badge
+  const mobBadge = document.getElementById('mob-cart-count');
+  if (mobBadge) mobBadge.textContent = total;
   try { localStorage.setItem('sstCart', JSON.stringify(cart)); } catch {}
 }
 

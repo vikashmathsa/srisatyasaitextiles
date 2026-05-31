@@ -1229,12 +1229,7 @@ body.dark-mode .product-card:hover {
 
 .empty-icon { font-size: 56px; }
 
-.cart-footer {
-  padding: 16px 20px;
-  border-top: 1px solid var(--glass-border);
-  background: transparent;
-  flex-shrink: 0;
-}
+
 
 .cart-summary { margin-bottom: 14px; }
 
