@@ -269,6 +269,12 @@ header {
   transition: var(--transition);
 }
 
+.search-bar-wrap {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+
 .search-bar:focus-within {
   border-color: rgba(99,170,255,0.6);
   background: var(--glass-bg-strong);
@@ -2917,14 +2923,6 @@ header {
   }
 }
 
-/* Fix: search bar wrapper needs position: relative for dropdown */
-.search-bar-wrap {
-  position: relative;
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-}
 
 /* Fix: cart footer needs padding */
 .cart-footer {
