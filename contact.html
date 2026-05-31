@@ -4,872 +4,662 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Contact Us – Sri Satya Sai Textiles</title>
+  <meta name="description" content="Get in touch with Sri Satya Sai Textiles. We're here for all your fabric queries, wholesale orders, and support.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --ink:     #eee8df;
-      --deep:    #f5ede0;
-      --rust:    #e8a96a;
-      --gold:    #d4a843;
-      --gold-lt: #f0ddb0;
-      --cream:   #0d0d0d;
-      --ivory:   #141414;
-      --border:  #2a2520;
-      --muted:   #7a7068;
+      --gold:      #d4a843;
+      --gold-lt:   #f0ddb0;
+      --gold-dk:   #a07820;
+      --rust:      #c8613a;
+      --rust-lt:   #e8a96a;
+      --ink:       #eee8df;
+      --deep:      #f5ede0;
+      --muted:     #8a7b72;
+      --border:    rgba(255,255,255,0.08);
+      --bg-page:   #131210;
+      --bg-card:   #1c1a17;
+      --bg-input:  #232018;
       --font-serif: 'Cormorant Garamond', Georgia, serif;
-      --font-sans:  'Jost', system-ui, sans-serif;
-      --shadow:  0 8px 40px rgba(0,0,0,0.5);
-      --shadow-sm: 0 2px 12px rgba(0,0,0,0.35);
-      --radius: 4px;
-      --ease: cubic-bezier(0.4, 0, 0.2, 1);
+      --font-sans:  'Outfit', system-ui, sans-serif;
+      --ease:       cubic-bezier(0.4, 0, 0.2, 1);
+      --radius:     10px;
     }
 
     html { scroll-behavior: smooth; }
 
     body {
       font-family: var(--font-sans);
-      background: #1a1a1a;
+      background: var(--bg-page);
       color: var(--ink);
       min-height: 100vh;
       overflow-x: hidden;
     }
 
-    /* ── Decorative texture overlay ── */
+    /* ── Global ambient glow ── */
     body::before {
       content: '';
       position: fixed;
       inset: 0;
-      background-image:
-        radial-gradient(circle at 10% 20%, rgba(212,168,67,0.07) 0%, transparent 50%),
-        radial-gradient(circle at 90% 80%, rgba(232,169,106,0.06) 0%, transparent 50%);
+      background:
+        radial-gradient(ellipse 80% 60% at 15% 10%, rgba(212,168,67,0.06) 0%, transparent 55%),
+        radial-gradient(ellipse 60% 50% at 85% 85%, rgba(200,97,58,0.05) 0%, transparent 55%);
       pointer-events: none;
       z-index: 0;
     }
-
     body > * { position: relative; z-index: 1; }
 
-    /* ── Top announcement bar ── */
+    /* ─────────────────────────────────
+       TOP ANNOUNCEMENT BAR
+    ───────────────────────────────── */
     .top-bar {
-      background: #0a0a08;
+      background: #0a0908;
       color: var(--gold-lt);
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 400;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
       padding: 9px 0;
       text-align: center;
       overflow: hidden;
       position: relative;
     }
-
     .top-bar::after {
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(90deg, transparent 0%, rgba(201,150,59,0.08) 50%, transparent 100%);
-      animation: sheen 4s ease-in-out infinite;
+      background: linear-gradient(90deg, transparent 0%, rgba(212,168,67,0.1) 50%, transparent 100%);
+      animation: sheen 5s ease-in-out infinite;
     }
-
-    @keyframes sheen {
-      0%, 100% { transform: translateX(-100%); }
-      50% { transform: translateX(100%); }
-    }
-
+    @keyframes sheen { 0%,100%{transform:translateX(-120%)} 50%{transform:translateX(120%)} }
     .top-bar-inner {
-      display: flex;
-      justify-content: center;
-      gap: 24px;
-      flex-wrap: wrap;
-      position: relative;
-      z-index: 1;
+      display: flex; justify-content: center;
+      gap: 20px; flex-wrap: wrap;
+      position: relative; z-index: 1;
     }
-
     .top-bar-inner span { display: flex; align-items: center; gap: 6px; }
 
-    /* ── Header ── */
+    /* ─────────────────────────────────
+       HEADER
+    ───────────────────────────────── */
     header {
-      background: #111111;
+      background: rgba(15,13,10,0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border);
       position: sticky;
       top: 0;
       z-index: 500;
     }
-
     .main-header {
-      display: flex;
-      align-items: center;
+      display: flex; align-items: center;
       justify-content: space-between;
-      padding: 18px 6%;
-      gap: 16px;
+      padding: 16px 6%; gap: 16px;
+      max-width: 1320px; margin: 0 auto;
     }
-
     .logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
+      display: flex; align-items: center; gap: 13px;
       text-decoration: none;
     }
-
     .logo-icon-wrap {
-      width: 48px;
-      height: 48px;
+      width: 48px; height: 48px;
       background: linear-gradient(135deg, var(--rust), var(--gold));
       border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      flex-shrink: 0;
-      box-shadow: 0 4px 12px rgba(139,58,42,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; flex-shrink: 0;
+      box-shadow: 0 4px 16px rgba(200,97,58,0.35);
     }
-
-    .logo-text { display: flex; flex-direction: column; }
-
     .logo-name {
       font-family: var(--font-serif);
-      font-size: 22px;
-      font-weight: 700;
-      color: var(--deep);
-      line-height: 1;
+      font-size: 22px; font-weight: 700;
+      color: var(--deep); line-height: 1;
       letter-spacing: 0.02em;
     }
-
     .logo-sub {
-      font-size: 9px;
-      font-weight: 600;
-      letter-spacing: 0.25em;
-      color: var(--rust);
-      text-transform: uppercase;
-      margin-top: 2px;
+      font-size: 9px; font-weight: 600;
+      letter-spacing: 0.28em; color: var(--rust-lt);
+      text-transform: uppercase; margin-top: 3px;
     }
-
     .back-link {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: var(--rust);
+      display: flex; align-items: center; gap: 8px;
+      color: var(--rust-lt);
       text-decoration: none;
-      font-size: 13px;
-      font-weight: 500;
-      letter-spacing: 0.05em;
+      font-size: 12px; font-weight: 500;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
       padding: 10px 20px;
-      border: 1px solid var(--rust);
-      border-radius: 2px;
+      border: 1px solid rgba(232,169,106,0.35);
+      border-radius: 6px;
       transition: all 0.25s var(--ease);
     }
-
     .back-link:hover {
-      background: var(--rust);
-      color: #fff;
+      background: rgba(200,97,58,0.15);
+      border-color: var(--rust-lt);
+      color: var(--deep);
     }
 
-    /* ── Hero Section ── */
+    /* ─────────────────────────────────
+       HERO SECTION
+    ───────────────────────────────── */
     .contact-hero {
-      background: linear-gradient(160deg, #111008 0%, #1a160c 100%);
-      color: #fff;
-      padding: 80px 6% 70px;
+      background: linear-gradient(160deg, #100e0b 0%, #1a1610 55%, #120e0b 100%);
+      padding: 90px 6% 80px;
       text-align: center;
       position: relative;
       overflow: hidden;
     }
-
     .contact-hero::before {
       content: '';
       position: absolute;
       inset: 0;
-      background-image:
-        repeating-linear-gradient(
-          45deg,
-          transparent 0px,
-          transparent 30px,
-          rgba(212,168,67,0.04) 30px,
-          rgba(212,168,67,0.04) 31px
-        );
+      background-image: repeating-linear-gradient(
+        -45deg,
+        transparent 0px, transparent 28px,
+        rgba(212,168,67,0.025) 28px, rgba(212,168,67,0.025) 29px
+      );
     }
+    .contact-hero::after {
+      content: '🧵';
+      position: absolute;
+      font-size: 320px;
+      opacity: 0.025;
+      right: -40px;
+      bottom: -60px;
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center; gap: 8px;
+      background: rgba(212,168,67,0.12);
+      border: 1px solid rgba(212,168,67,0.35);
+      border-radius: 99px;
+      padding: 6px 18px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold-lt);
+      margin-bottom: 24px;
+      position: relative; z-index: 1;
+      animation: fadeIn 0.8s ease both;
+    }
+
+    @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
 
     .hero-ornament {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
-      margin-bottom: 20px;
-      position: relative;
-      z-index: 1;
+      display: flex; align-items: center; justify-content: center;
+      gap: 14px; margin-bottom: 22px;
+      position: relative; z-index: 1;
+      animation: fadeIn 0.9s 0.1s ease both;
     }
-
     .ornament-line {
-      width: 60px;
-      height: 1px;
+      width: 70px; height: 1px;
       background: linear-gradient(90deg, transparent, var(--gold));
     }
-
-    .ornament-line.right {
-      background: linear-gradient(90deg, var(--gold), transparent);
-    }
-
+    .ornament-line.right { background: linear-gradient(90deg, var(--gold), transparent); }
     .ornament-diamond {
-      width: 8px;
-      height: 8px;
-      background: var(--gold);
-      transform: rotate(45deg);
+      width: 8px; height: 8px;
+      background: var(--gold); transform: rotate(45deg);
     }
 
     .contact-hero h1 {
       font-family: var(--font-serif);
-      font-size: clamp(36px, 6vw, 62px);
+      font-size: clamp(36px, 6vw, 68px);
       font-weight: 600;
-      line-height: 1.1;
-      letter-spacing: 0.02em;
-      margin-bottom: 16px;
-      position: relative;
-      z-index: 1;
+      line-height: 1.1; letter-spacing: 0.01em;
+      margin-bottom: 18px;
+      position: relative; z-index: 1;
+      animation: fadeIn 1s 0.15s ease both;
     }
-
-    .contact-hero h1 em {
-      color: var(--gold);
-      font-style: italic;
-    }
+    .contact-hero h1 em { color: var(--gold); font-style: italic; }
 
     .contact-hero p {
       font-size: 16px;
-      color: rgba(255,255,255,0.65);
+      color: rgba(255,255,255,0.55);
       max-width: 480px;
-      margin: 0 auto;
-      line-height: 1.7;
+      margin: 0 auto 0;
+      line-height: 1.75;
       font-weight: 300;
+      position: relative; z-index: 1;
+      animation: fadeIn 1s 0.25s ease both;
+    }
+
+    /* ── Trust Strip ── */
+    .trust-strip {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      flex-wrap: wrap;
+      padding: 20px 6% 0;
       position: relative;
       z-index: 1;
     }
+    .trust-item {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 12.5px;
+      color: rgba(255,255,255,0.45);
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      animation: fadeIn 1s 0.35s ease both;
+    }
+    .trust-item span:first-child { font-size: 16px; }
 
-    /* ── Main Content Layout ── */
+    /* ─────────────────────────────────
+       MAIN CONTACT BODY
+    ───────────────────────────────── */
     .contact-body {
-      max-width: 1200px;
+      max-width: 1240px;
       margin: 0 auto;
       padding: 72px 6%;
       display: grid;
-      grid-template-columns: 1fr 1.6fr;
-      gap: 64px;
+      grid-template-columns: 1fr 1.7fr;
+      gap: 60px;
       align-items: start;
     }
 
-    /* ── Left Info Panel ── */
-    .info-panel {}
-
+    /* ── Info Panel (left) ── */
     .panel-eyebrow {
-      font-size: 10px;
-      font-weight: 600;
+      font-size: 10px; font-weight: 600;
       letter-spacing: 0.22em;
       text-transform: uppercase;
-      color: var(--rust);
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      color: var(--rust-lt);
+      margin-bottom: 14px;
+      display: flex; align-items: center; gap: 10px;
     }
-
     .panel-eyebrow::after {
       content: '';
-      flex: 1;
-      height: 1px;
+      flex: 1; height: 1px;
       background: var(--border);
       max-width: 40px;
     }
 
     .panel-title {
       font-family: var(--font-serif);
-      font-size: clamp(26px, 3vw, 36px);
-      font-weight: 600;
-      line-height: 1.2;
-      color: var(--deep);
-      margin-bottom: 20px;
+      font-size: clamp(26px, 3vw, 38px);
+      font-weight: 600; line-height: 1.2;
+      color: var(--deep); margin-bottom: 20px;
     }
 
     .panel-desc {
-      font-size: 14px;
-      color: var(--muted);
-      line-height: 1.8;
-      margin-bottom: 36px;
+      font-size: 14px; color: var(--muted);
+      line-height: 1.85; margin-bottom: 36px;
       font-weight: 300;
     }
 
-    /* Contact detail cards */
+    /* Contact items */
     .contact-items { display: flex; flex-direction: column; gap: 0; }
 
     .contact-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 16px;
+      display: flex; align-items: flex-start; gap: 16px;
       padding: 20px 0;
       border-bottom: 1px solid var(--border);
       transition: all 0.25s var(--ease);
+      cursor: default;
     }
-
     .contact-item:first-child { border-top: 1px solid var(--border); }
-
-    .contact-item:hover { padding-left: 6px; }
+    .contact-item:hover { padding-left: 8px; }
 
     .ci-icon {
-      width: 42px;
-      height: 42px;
-      background: linear-gradient(135deg, rgba(139,58,42,0.1), rgba(201,150,59,0.12));
-      border: 1px solid rgba(201,150,59,0.25);
+      width: 44px; height: 44px;
+      background: linear-gradient(135deg, rgba(200,97,58,0.12), rgba(212,168,67,0.14));
+      border: 1px solid rgba(212,168,67,0.2);
       border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 17px;
-      flex-shrink: 0;
-      margin-top: 2px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; flex-shrink: 0; margin-top: 2px;
     }
-
     .ci-label {
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.15em;
+      font-size: 9.5px; font-weight: 600;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 4px;
+      color: var(--muted); margin-bottom: 4px;
     }
-
     .ci-value {
-      font-size: 15px;
-      font-weight: 500;
-      color: var(--deep);
-      line-height: 1.4;
+      font-size: 14.5px; font-weight: 500;
+      color: var(--deep); line-height: 1.4;
     }
-
     .ci-sub {
-      font-size: 12px;
-      color: var(--muted);
-      margin-top: 2px;
-      font-weight: 300;
+      font-size: 12px; color: var(--muted);
+      margin-top: 2px; font-weight: 300;
     }
 
     /* Hours box */
     .hours-box {
-      background: linear-gradient(135deg, #1e1a16, #252015);
-      color: #fff;
+      background: linear-gradient(135deg, #1e1a14, #261f14);
+      border: 1px solid rgba(212,168,67,0.15);
       border-radius: var(--radius);
-      padding: 24px;
+      padding: 26px;
       margin-top: 32px;
-      position: relative;
-      overflow: hidden;
+      position: relative; overflow: hidden;
     }
-
     .hours-box::before {
       content: '🕐';
       position: absolute;
-      right: 20px;
-      bottom: 10px;
-      font-size: 56px;
-      opacity: 0.08;
+      right: 18px; bottom: 8px;
+      font-size: 60px; opacity: 0.06;
       line-height: 1;
     }
-
     .hours-title {
       font-family: var(--font-serif);
-      font-size: 17px;
-      font-weight: 600;
+      font-size: 17px; font-weight: 600;
       color: var(--gold-lt);
       margin-bottom: 14px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
     }
-
     .hours-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 13px;
-      padding: 7px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      color: rgba(255,255,255,0.75);
+      display: flex; justify-content: space-between;
+      font-size: 13px; padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      color: rgba(255,255,255,0.6);
+    }
+    .hours-row:last-child { border-bottom: none; }
+    .hours-row .day { font-weight: 500; color: rgba(255,255,255,0.85); }
+
+    /* WhatsApp quick CTA */
+    .whatsapp-cta {
+      display: flex; align-items: center; gap: 12px;
+      background: linear-gradient(135deg, #0f2e1a, #12391f);
+      border: 1px solid rgba(37,211,102,0.2);
+      border-radius: var(--radius);
+      padding: 18px 22px;
+      margin-top: 20px;
+      text-decoration: none;
+      transition: all 0.3s var(--ease);
+    }
+    .whatsapp-cta:hover {
+      border-color: rgba(37,211,102,0.45);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(37,211,102,0.12);
+    }
+    .wa-icon {
+      width: 42px; height: 42px;
+      background: #25d366;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; flex-shrink: 0;
+    }
+    .wa-text .wa-label {
+      font-size: 10px; font-weight: 600;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: rgba(37,211,102,0.7); margin-bottom: 3px;
+    }
+    .wa-text .wa-title {
+      font-size: 14px; font-weight: 600;
+      color: rgba(255,255,255,0.85);
     }
 
-    .hours-row:last-child { border-bottom: none; }
-    .hours-row .day { font-weight: 500; color: rgba(255,255,255,0.9); }
-
-    /* Response badge */
     .response-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(201,150,59,0.12);
-      border: 1px solid rgba(201,150,59,0.3);
-      border-radius: 2px;
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(212,168,67,0.08);
+      border: 1px solid rgba(212,168,67,0.25);
+      border-radius: 6px;
       padding: 10px 16px;
-      font-size: 13px;
-      color: var(--deep);
-      margin-top: 20px;
+      font-size: 12.5px;
+      color: var(--ink);
+      margin-top: 18px;
       font-weight: 400;
     }
+    .response-badge strong { color: var(--gold); }
 
-    .response-badge strong { color: var(--rust); }
-
-    /* ── Right Form Panel ── */
+    /* ─────────────────────────────────
+       FORM PANEL (right) — Google Form
+    ───────────────────────────────── */
     .form-panel {
-      background: #111111;
+      background: var(--bg-card);
       border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 48px;
-      box-shadow: var(--shadow);
+      border-radius: 16px;
+      padding: 36px 36px 28px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
       position: relative;
+      overflow: hidden;
     }
-
     .form-panel::before {
       content: '';
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
+      top: 0; left: 0; right: 0;
       height: 3px;
-      background: linear-gradient(90deg, var(--gold), var(--rust), var(--gold));
+      background: linear-gradient(90deg, var(--rust), var(--gold), var(--rust-lt), var(--gold));
+    }
+    .form-panel::after {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(212,168,67,0.06) 0%, transparent 70%);
+      pointer-events: none;
     }
 
     .form-title {
       font-family: var(--font-serif);
-      font-size: 28px;
-      font-weight: 600;
-      color: var(--deep);
-      margin-bottom: 6px;
+      font-size: 28px; font-weight: 600;
+      color: var(--deep); margin-bottom: 6px;
     }
-
     .form-subtitle {
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 36px;
-      font-weight: 300;
+      font-size: 13px; color: var(--muted);
+      margin-bottom: 24px; font-weight: 300;
+      line-height: 1.6;
     }
 
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      margin-bottom: 20px;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 7px;
-      margin-bottom: 20px;
-    }
-
-    .form-group.half { margin-bottom: 0; }
-
-    label {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    input, textarea, select {
-      font-family: var(--font-sans);
-      font-size: 14px;
-      font-weight: 400;
-      color: var(--ink);
-      background: #1a1a1a;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 13px 16px;
-      outline: none;
-      transition: all 0.25s var(--ease);
-      width: 100%;
-    }
-
-    input:focus, textarea:focus, select:focus {
-      border-color: var(--rust);
-      background: #1f1f1f;
-      box-shadow: 0 0 0 3px rgba(139,58,42,0.08);
-    }
-
-    textarea { resize: vertical; min-height: 120px; line-height: 1.6; }
-
-    select { cursor: pointer; appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a7b72' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 14px center;
-      padding-right: 40px;
-    }
-
-    .submit-btn {
-      width: 100%;
-      padding: 16px 32px;
-      background: linear-gradient(135deg, var(--gold), #a07820);
-      color: #fff;
-      font-family: var(--font-sans);
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      border: none;
-      border-radius: var(--radius);
-      cursor: pointer;
-      transition: all 0.3s var(--ease);
-      position: relative;
+    /* Google Form iframe wrapper */
+    .gform-wrap {
+      border-radius: 10px;
       overflow: hidden;
-      margin-top: 8px;
+      border: 1px solid rgba(255,255,255,0.07);
+      background: #fff;
+      position: relative;
+    }
+    .gform-wrap iframe {
+      display: block;
+      width: 100%;
+      height: 660px;
+      border: none;
     }
 
-    .submit-btn::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, var(--gold), #a07820);
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(139,58,42,0.35); }
-    .submit-btn:hover::before { opacity: 1; }
-    .submit-btn:active { transform: translateY(0); }
-
-    .submit-btn span { position: relative; z-index: 1; }
-
-    /* Form success state */
-    .form-success {
-      display: none;
-      text-align: center;
-      padding: 48px 24px;
-      animation: fadeUp 0.5s ease forwards;
-    }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(16px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .success-icon {
-      width: 72px;
-      height: 72px;
-      background: linear-gradient(135deg, rgba(22,163,74,0.1), rgba(22,163,74,0.2));
-      border: 2px solid rgba(22,163,74,0.4);
-      border-radius: 50%;
+    /* Open in new tab link */
+    .gform-external {
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 32px;
-      margin: 0 auto 20px;
-    }
-
-    .success-title {
-      font-family: var(--font-serif);
-      font-size: 26px;
-      color: var(--deep);
-      margin-bottom: 10px;
-    }
-
-    .success-text {
-      font-size: 14px;
-      color: var(--muted);
-      line-height: 1.7;
-    }
-
-    /* ── Map / Location section ── */
-    .location-strip {
-      background: #111111;
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      padding: 48px 6%;
-    }
-
-    .location-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 48px;
-      align-items: center;
-    }
-
-    .location-text .panel-eyebrow { margin-bottom: 10px; }
-
-    .location-title {
-      font-family: var(--font-serif);
-      font-size: 30px;
-      font-weight: 600;
-      color: var(--deep);
-      margin-bottom: 14px;
-      line-height: 1.2;
-    }
-
-    .location-desc {
-      font-size: 14px;
-      color: var(--muted);
-      line-height: 1.8;
-      margin-bottom: 24px;
-      font-weight: 300;
-    }
-
-    .directions-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: #0a0a08;
-      color: #fff;
-      text-decoration: none;
+      gap: 6px;
+      margin-top: 14px;
       font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      padding: 12px 24px;
-      border-radius: var(--radius);
-      transition: all 0.25s var(--ease);
-    }
-
-    .directions-btn:hover { background: var(--rust); transform: translateY(-1px); }
-
-    .map-placeholder {
-      background: linear-gradient(135deg, #1a1815, #221f1a);
-      border-radius: var(--radius);
-      height: 260px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
       color: var(--muted);
-      font-size: 14px;
-      border: 1px solid var(--border);
-      overflow: hidden;
-      position: relative;
-    }
-
-    .map-placeholder iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-      position: absolute;
-      inset: 0;
-    }
-
-    /* ── Social section ── */
-    .social-strip {
-      padding: 56px 6%;
-      text-align: center;
-      max-width: 700px;
-      margin: 0 auto;
-    }
-
-    .social-title {
-      font-family: var(--font-serif);
-      font-size: 28px;
-      color: var(--deep);
-      margin-bottom: 8px;
-    }
-
-    .social-sub {
-      font-size: 14px;
-      color: var(--muted);
-      margin-bottom: 28px;
-      font-weight: 300;
-    }
-
-    .social-links {
-      display: flex;
-      justify-content: center;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-
-    .social-link {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 12px 22px;
-      border: 1px solid var(--border);
-      border-radius: 2px;
       text-decoration: none;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--deep);
-      transition: all 0.25s var(--ease);
-      background: #111111;
-    }
-
-    .social-link:hover {
-      border-color: var(--rust);
-      color: var(--rust);
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-sm);
-    }
-
-    /* ── Footer ── */
-    footer {
-      background: #0a0a08;
-      color: rgba(255,255,255,0.5);
-      padding: 48px 6% 0;
-    }
-
-    .footer-grid {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr;
-      gap: 48px;
-      padding-bottom: 48px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .footer-brand-logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-
-    .footer-logo-icon {
-      width: 38px;
-      height: 38px;
-      background: linear-gradient(135deg, var(--rust), var(--gold));
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-    }
-
-    .footer-logo-name {
-      font-family: var(--font-serif);
-      font-size: 20px;
-      color: var(--gold-lt);
-      font-weight: 600;
-    }
-
-    .footer-tagline {
-      font-size: 13px;
-      line-height: 1.7;
-      font-weight: 300;
-      max-width: 280px;
-    }
-
-    .footer-col-title {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.7);
-      margin-bottom: 16px;
-    }
-
-    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-
-    .footer-links a {
-      color: rgba(255,255,255,0.45);
-      text-decoration: none;
-      font-size: 13px;
-      font-weight: 300;
+      letter-spacing: 0.04em;
       transition: color 0.2s;
     }
+    .gform-external:hover { color: var(--gold-lt); }
 
-    .footer-links a:hover { color: var(--gold); }
-
-    .footer-bottom {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px 0;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 12px;
-      flex-wrap: wrap;
-      gap: 8px;
+    @media (max-width: 640px) {
+      .gform-wrap iframe { height: 720px; }
     }
 
-    .footer-bottom-right {
-      display: flex;
-      gap: 4px;
-      align-items: center;
+    /* ─────────────────────────────────
+       LOCATION SECTION
+    ───────────────────────────────── */
+    .location-strip {
+      background: #111110;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 56px 6%;
+    }
+    .location-inner {
+      max-width: 1240px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 52px; align-items: center;
+    }
+    .location-title {
+      font-family: var(--font-serif);
+      font-size: 30px; font-weight: 600;
+      color: var(--deep); margin-bottom: 14px; line-height: 1.2;
+    }
+    .location-desc {
+      font-size: 14px; color: var(--muted);
+      line-height: 1.85; margin-bottom: 24px; font-weight: 300;
+    }
+    .directions-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--bg-card);
+      color: var(--gold-lt);
+      text-decoration: none;
+      font-size: 12px; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 13px 26px;
+      border: 1px solid rgba(212,168,67,0.35);
+      border-radius: 8px;
+      transition: all 0.25s var(--ease);
+    }
+    .directions-btn:hover {
+      background: rgba(212,168,67,0.1);
+      border-color: var(--gold);
+      transform: translateY(-1px);
+    }
+    .map-placeholder {
+      border-radius: 14px;
+      height: 280px;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid var(--border);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+    }
+    .map-placeholder iframe {
+      width: 100%; height: 100%;
+      border: none; position: absolute; inset: 0;
     }
 
-    .footer-bottom-right span {
-      width: 6px; height: 6px;
-      background: var(--gold);
+    /* ─────────────────────────────────
+       SOCIAL SECTION
+    ───────────────────────────────── */
+    .social-section { background: #0e0d0b; padding: 60px 6%; text-align: center; }
+    .social-title {
+      font-family: var(--font-serif);
+      font-size: 28px; color: var(--deep);
+      margin-bottom: 8px;
+    }
+    .social-sub {
+      font-size: 14px; color: var(--muted);
+      margin-bottom: 32px; font-weight: 300;
+    }
+    .social-links {
+      display: flex; justify-content: center;
+      gap: 14px; flex-wrap: wrap;
+    }
+    .social-link {
+      display: flex; align-items: center; gap: 9px;
+      padding: 12px 24px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 13px; font-weight: 500;
+      color: var(--ink);
+      transition: all 0.25s var(--ease);
+    }
+    .social-link:hover {
+      border-color: var(--gold);
+      color: var(--gold-lt);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+
+    /* ─────────────────────────────────
+       FOOTER
+    ───────────────────────────────── */
+    footer {
+      background: #080807;
+      color: rgba(255,255,255,0.45);
+      padding: 48px 6% 0;
+    }
+    .footer-grid {
+      max-width: 1240px; margin: 0 auto;
+      display: grid; grid-template-columns: 2fr 1fr 1fr;
+      gap: 48px; padding-bottom: 48px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .footer-brand-logo {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 14px;
+    }
+    .footer-logo-icon {
+      width: 38px; height: 38px;
+      background: linear-gradient(135deg, var(--rust), var(--gold));
       border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; font-size: 18px;
+    }
+    .footer-logo-name {
+      font-family: var(--font-serif);
+      font-size: 19px; color: var(--gold-lt); font-weight: 600;
+    }
+    .footer-tagline { font-size: 13px; line-height: 1.75; font-weight: 300; max-width: 280px; }
+    .footer-col-title {
+      font-size: 10.5px; font-weight: 600;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: rgba(255,255,255,0.6); margin-bottom: 16px;
+    }
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-links a {
+      color: rgba(255,255,255,0.38);
+      text-decoration: none; font-size: 13px; font-weight: 300;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--gold); }
+    .footer-bottom {
+      max-width: 1240px; margin: 0 auto;
+      padding: 20px 0;
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 12px; flex-wrap: wrap; gap: 8px;
     }
 
-    /* ── Animations on scroll ── */
+    /* ─────────────────────────────────
+       SCROLL REVEAL
+    ───────────────────────────────── */
     [data-reveal] {
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
+      opacity: 0; transform: translateY(28px);
+      transition: opacity 0.65s var(--ease), transform 0.65s var(--ease);
     }
+    [data-reveal].visible { opacity: 1; transform: translateY(0); }
+    [data-reveal="delay"] { transition-delay: 0.12s; }
 
-    [data-reveal].visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* ── MOBILE RESPONSIVE ── */
-    @media (max-width: 900px) {
-      .contact-body {
-        grid-template-columns: 1fr;
-        padding: 48px 5%;
-        gap: 48px;
-      }
-
-      .location-inner {
-        grid-template-columns: 1fr;
-        gap: 32px;
-      }
-
-      .footer-grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 32px;
-      }
-
+    /* ─────────────────────────────────
+       RESPONSIVE
+    ───────────────────────────────── */
+    @media (max-width: 960px) {
+      .contact-body { grid-template-columns: 1fr; padding: 52px 5%; gap: 48px; }
+      .location-inner { grid-template-columns: 1fr; gap: 32px; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
       .footer-grid > .footer-brand { grid-column: 1 / -1; }
     }
-
     @media (max-width: 640px) {
       .main-header { padding: 14px 5%; }
       .logo-name { font-size: 18px; }
       .back-link span { display: none; }
       .back-link { padding: 9px 14px; }
-
-      .contact-hero { padding: 52px 5% 44px; }
-
+      .contact-hero { padding: 56px 5% 48px; }
       .form-panel { padding: 28px 20px; }
-
       .form-row { grid-template-columns: 1fr; }
-
       .footer-grid { grid-template-columns: 1fr; }
       .footer-grid > *:not(.footer-brand) { display: none; }
-
-      .top-bar-inner { gap: 12px; font-size: 11px; }
-      .top-bar-inner span:nth-child(4),
-      .top-bar-inner span:nth-child(5) { display: none; }
-
-      .social-strip { padding: 36px 5%; }
-
-      .location-strip { padding: 36px 5%; }
-
-      .contact-body { padding: 36px 5%; }
+      .trust-strip { gap: 16px; padding-top: 14px; }
     }
-
     @media (max-width: 420px) {
       .contact-hero h1 { font-size: 30px; }
       .form-panel { padding: 22px 16px; }
-      .social-link { padding: 10px 16px; font-size: 12px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Top announcement bar -->
+  <!-- Top bar -->
   <div class="top-bar">
     <div class="top-bar-inner">
       <span>🚚 Free Shipping on Orders Above ₹999</span>
-      <span>|</span>
+      <span aria-hidden="true">|</span>
       <span>💳 COD Available</span>
-      <span>|</span>
+      <span aria-hidden="true">|</span>
       <span>⚡ Fast Delivery Across AP &amp; Telangana</span>
     </div>
   </div>
@@ -879,36 +669,40 @@
     <div class="main-header">
       <a href="index.html" class="logo">
         <div class="logo-icon-wrap">🧵</div>
-        <div class="logo-text">
+        <div>
           <div class="logo-name">Sri Satya Sai</div>
           <div class="logo-sub">Textiles</div>
         </div>
       </a>
-      <a href="index.html" class="back-link">
-        ← <span>Back to Home</span>
-      </a>
+      <a href="index.html" class="back-link">← <span>Back to Home</span></a>
     </div>
   </header>
 
   <!-- Hero -->
   <section class="contact-hero">
+    <span class="hero-badge">✦ We're here to help</span>
     <div class="hero-ornament">
       <div class="ornament-line"></div>
       <div class="ornament-diamond"></div>
       <div class="ornament-line right"></div>
     </div>
     <h1>We'd Love to <em>Hear From You</em></h1>
-    <p>Questions about an order, fabric queries, or just want to say hello — we're here to help.</p>
+    <p>Order queries, fabric questions, wholesale enquiries or just a hello — our team is ready.</p>
+    <div class="trust-strip">
+      <div class="trust-item"><span>⏱</span> Reply within 24 hrs</div>
+      <div class="trust-item"><span>💬</span> WhatsApp support</div>
+      <div class="trust-item"><span>🛍</span> Serving AP &amp; Telangana</div>
+    </div>
   </section>
 
-  <!-- Main contact body -->
+  <!-- Main body -->
   <main class="contact-body">
 
-    <!-- Left: Info -->
+    <!-- Left: Info Panel -->
     <aside class="info-panel" data-reveal>
       <div class="panel-eyebrow">Contact Info</div>
       <h2 class="panel-title">Get In Touch<br>With Our Team</h2>
-      <p class="panel-desc">We're a family-run textile store in Srikakulam with a passion for quality fabric and exceptional service.</p>
+      <p class="panel-desc">We're a family-run textile store in Srikakulam with a passion for quality fabric and exceptional service. We'd love to hear from you.</p>
 
       <div class="contact-items">
         <div class="contact-item">
@@ -919,7 +713,6 @@
             <div class="ci-sub">India — 532001</div>
           </div>
         </div>
-
         <div class="contact-item">
           <div class="ci-icon">📧</div>
           <div>
@@ -928,88 +721,59 @@
             <div class="ci-sub">We respond within 24 hours</div>
           </div>
         </div>
-
         <div class="contact-item">
           <div class="ci-icon">📞</div>
           <div>
             <div class="ci-label">Phone / WhatsApp</div>
-            <div class="ci-value">+91 XXXXXXXXXX</div>
-            <div class="ci-sub">Call or WhatsApp anytime</div>
+            <div class="ci-value">+91 89196 48679</div>
+            <div class="ci-sub">Mon – Sat, 9 AM to 8 PM</div>
           </div>
         </div>
       </div>
 
       <div class="hours-box">
-        <div class="hours-title">🕐 Business Hours</div>
-        <div class="hours-row">
-          <span class="day">Monday – Saturday</span>
-          <span>9:00 AM – 8:00 PM</span>
-        </div>
-        <div class="hours-row">
-          <span class="day">Sunday</span>
-          <span>10:00 AM – 6:00 PM</span>
-        </div>
+        <div class="hours-title">Business Hours</div>
+        <div class="hours-row"><span class="day">Monday – Saturday</span><span>9:00 AM – 8:00 PM</span></div>
+        <div class="hours-row"><span class="day">Sunday</span><span>10:00 AM – 6:00 PM</span></div>
       </div>
 
-      <div class="response-badge">
-        ⚡ Average reply time: <strong>under 24 hours</strong>
-      </div>
+      <a href="https://wa.me/918919648679?text=Hi%2C%20I%27d%20like%20to%20enquire%20about%20your%20textiles!" class="whatsapp-cta" target="_blank" rel="noopener">
+        <div class="wa-icon">💬</div>
+        <div class="wa-text">
+          <div class="wa-label">Quickest response</div>
+          <div class="wa-title">Chat on WhatsApp</div>
+        </div>
+      </a>
+
+      <div class="response-badge">⚡ Average reply time: <strong>under 24 hours</strong></div>
     </aside>
 
-    <!-- Right: Form -->
-    <div class="form-panel" data-reveal>
-      <div id="formWrap">
-        <h2 class="form-title">Send Us a Message</h2>
-        <p class="form-subtitle">Fill in the details below and we'll get back to you shortly.</p>
+    <!-- Right: Google Form Panel -->
+    <div class="form-panel" data-reveal="delay">
+      <h2 class="form-title">Send Us a Message</h2>
+      <p class="form-subtitle">Fill in the form below — responses go directly to our inbox and we'll get back to you within 24 hours.</p>
 
-        <div class="form-row">
-          <div class="form-group half">
-            <label for="fname">First Name</label>
-            <input type="text" id="fname" placeholder="Vikash" autocomplete="given-name">
-          </div>
-          <div class="form-group half">
-            <label for="lname">Last Name</label>
-            <input type="text" id="lname" placeholder="Mathsa" autocomplete="family-name">
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="email">Email Address</label>
-          <input type="email" id="email" placeholder="you@example.com" autocomplete="email">
-        </div>
-
-        <div class="form-group">
-          <label for="phone">Phone / WhatsApp</label>
-          <input type="tel" id="phone" placeholder="+91 00000 00000" autocomplete="tel">
-        </div>
-
-        <div class="form-group">
-          <label for="subject">Subject</label>
-          <select id="subject">
-            <option value="" disabled selected>Select a topic…</option>
-            <option>Order Enquiry</option>
-            <option>Product / Fabric Query</option>
-            <option>Wholesale / Bulk Order</option>
-            <option>Return / Refund</option>
-            <option>Other</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="message">Message</label>
-          <textarea id="message" placeholder="Tell us how we can help you…"></textarea>
-        </div>
-
-        <button class="submit-btn" onclick="handleSubmit()">
-          <span>Send Message →</span>
-        </button>
+      <div class="gform-wrap">
+        <iframe
+          src="https://docs.google.com/forms/d/e/1FAIpQLSeWF9dstvd2vUWD-T14uWsuqc7D5FDFgMYZ4C4fzzUruaR8WA/viewform?embedded=true"
+          width="100%"
+          height="660"
+          frameborder="0"
+          marginheight="0"
+          marginwidth="0"
+          title="Contact Sri Satya Sai Textiles"
+          loading="lazy">
+          Loading form…
+        </iframe>
       </div>
 
-      <div class="form-success" id="formSuccess">
-        <div class="success-icon">✅</div>
-        <div class="success-title">Message Sent!</div>
-        <p class="success-text">Thank you for reaching out. Our team will get back to you within 24 hours.</p>
-      </div>
+      <a
+        href="https://docs.google.com/forms/d/e/1FAIpQLSeWF9dstvd2vUWD-T14uWsuqc7D5FDFgMYZ4C4fzzUruaR8WA/viewform"
+        target="_blank"
+        rel="noopener"
+        class="gform-external">
+        ↗ Open form in a new tab
+      </a>
     </div>
 
   </main>
@@ -1020,32 +784,32 @@
       <div class="location-text" data-reveal>
         <div class="panel-eyebrow">Find Us</div>
         <h2 class="location-title">Visit Our Store in Srikakulam</h2>
-        <p class="location-desc">Drop by our store to browse our complete collection of sarees, dress materials, and fabrics in person. Our staff would be happy to help you find exactly what you're looking for.</p>
+        <p class="location-desc">Come visit us and browse our full collection of sarees, dress materials, kurtis, and home textiles in person. Our team is happy to help you find exactly what you're looking for.</p>
         <a href="https://maps.google.com/?q=Srikakulam+Andhra+Pradesh" target="_blank" rel="noopener" class="directions-btn">
           📍 Get Directions
         </a>
       </div>
-      <div class="map-placeholder" data-reveal>
+      <div class="map-placeholder" data-reveal="delay">
         <iframe
           src="https://maps.google.com/maps?q=Srikakulam,Andhra+Pradesh,India&output=embed"
           loading="lazy"
           referrerpolicy="no-referrer-when-downgrade"
-          title="Store Location">
+          title="Sri Satya Sai Textiles Store Location">
         </iframe>
       </div>
     </div>
   </section>
 
   <!-- Social -->
-  <section style="background: #111111;">
-    <div class="social-strip" data-reveal>
+  <section class="social-section">
+    <div data-reveal>
       <h2 class="social-title">Follow Our Journey</h2>
-      <p class="social-sub">Stay updated with new arrivals, offers, and textile inspiration.</p>
+      <p class="social-sub">Stay updated with new arrivals, seasonal offers, and textile inspiration.</p>
       <div class="social-links">
         <a href="#" class="social-link">📘 Facebook</a>
         <a href="#" class="social-link">📸 Instagram</a>
-        <a href="https://wa.me/91XXXXXXXXXX" class="social-link">💬 WhatsApp</a>
-        <a href="mailto:vikashmathsa1999@gmail.com" class="social-link">✉️ Email</a>
+        <a href="https://wa.me/918919648679" class="social-link">💬 WhatsApp</a>
+        <a href="mailto:vikashmathsa1999@gmail.com" class="social-link">✉️ Email Us</a>
       </div>
     </div>
   </section>
@@ -1058,13 +822,13 @@
           <div class="footer-logo-icon">🧵</div>
           <div class="footer-logo-name">Sri Satya Sai Textiles</div>
         </div>
-        <p class="footer-tagline">Quality textiles from the heart of Srikakulam. Trusted by families across Andhra Pradesh & Telangana for generations.</p>
+        <p class="footer-tagline">Quality textiles from the heart of Srikakulam. Trusted by families across Andhra Pradesh &amp; Telangana.</p>
       </div>
       <div>
         <div class="footer-col-title">Quick Links</div>
         <ul class="footer-links">
           <li><a href="index.html">Home</a></li>
-          <li><a href="#">Shop</a></li>
+          <li><a href="index.html#products">Shop</a></li>
           <li><a href="#">Sarees</a></li>
           <li><a href="#">Offers</a></li>
         </ul>
@@ -1081,42 +845,23 @@
     </div>
     <div class="footer-bottom">
       <span>© 2026 Sri Satya Sai Textiles. All Rights Reserved.</span>
-      <div class="footer-bottom-right">
-        <span></span>
-        Made with ❤️ in Srikakulam
-      </div>
+      <span>Made with ❤️ in Srikakulam by <a href="about-admin.html" style="color:var(--gold);text-decoration:none;">Vikash Mathsa</a></span>
     </div>
   </footer>
 
   <script>
-    // Scroll reveal
+    /* Scroll reveal */
     const reveals = document.querySelectorAll('[data-reveal]');
     const observer = new IntersectionObserver(entries => {
-      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
-    }, { threshold: 0.1 });
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+      });
+    }, { threshold: 0.08 });
     reveals.forEach(el => observer.observe(el));
-
-    // Trigger visible for elements in view on load
     setTimeout(() => reveals.forEach(el => {
-      const rect = el.getBoundingClientRect();
-      if (rect.top < window.innerHeight) el.classList.add('visible');
-    }), 100);
-
-    // Form submit
-    function handleSubmit() {
-      const name = document.getElementById('fname').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const msg = document.getElementById('message').value.trim();
-
-      if (!name || !email || !msg) {
-        alert('Please fill in your name, email, and message before sending.');
-        return;
-      }
-
-      // Show success
-      document.getElementById('formWrap').style.display = 'none';
-      document.getElementById('formSuccess').style.display = 'block';
-    }
+      const r = el.getBoundingClientRect();
+      if (r.top < window.innerHeight) el.classList.add('visible');
+    }), 80);
   </script>
 </body>
 </html>
