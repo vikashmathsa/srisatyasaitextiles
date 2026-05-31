@@ -40,6 +40,151 @@
       object-fit: cover; border: 1.5px solid rgba(15,23,42,0.25);
       flex-shrink: 0;
     }
+
+    /* Android App Download Banner */
+    .app-banner {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #0a0f1e 0%, #0f2744 60%, #1a1a2e 100%);
+      padding: 52px 24px;
+    }
+    .app-banner::before {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 320px; height: 320px;
+      background: radial-gradient(circle, rgba(240,180,41,0.12) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .app-banner::after {
+      content: '';
+      position: absolute;
+      bottom: -60px; left: -60px;
+      width: 240px; height: 240px;
+      background: radial-gradient(circle, rgba(61,220,132,0.10) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .app-banner-inner {
+      max-width: 980px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 1;
+    }
+    .app-banner-text .app-banner-badge {
+      display: inline-block;
+      background: rgba(240,180,41,0.15);
+      border: 1px solid rgba(240,180,41,0.35);
+      color: #f0b429;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+    }
+    .app-banner-text .app-banner-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+    .app-banner-text .app-banner-title span { color: #f0b429; }
+    .app-banner-text p {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      color: rgba(255,255,255,0.65);
+      max-width: 480px;
+      line-height: 1.65;
+      margin: 0;
+    }
+    .app-download-btn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      background: linear-gradient(135deg, #3ddc84 0%, #22c55e 100%);
+      color: #0a1a0f;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 800;
+      padding: 16px 28px;
+      border-radius: 16px;
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 6px 24px rgba(61,220,132,0.35), 0 2px 8px rgba(0,0,0,0.3);
+      flex-shrink: 0;
+    }
+    .app-download-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 16px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.18) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .app-download-btn:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 12px 36px rgba(61,220,132,0.45), 0 4px 12px rgba(0,0,0,0.35);
+    }
+    .app-download-btn:active { transform: translateY(-1px) scale(1.01); }
+    .app-download-btn .btn-icon {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 42px; height: 42px;
+      background: rgba(0,0,0,0.15);
+      border-radius: 10px;
+      flex-shrink: 0;
+    }
+    .app-download-btn .btn-text { line-height: 1.2; }
+    .app-download-btn .btn-text small {
+      display: block;
+      font-size: 10px;
+      font-weight: 500;
+      opacity: 0.75;
+      letter-spacing: 0.04em;
+    }
+    .app-download-btn .btn-text strong {
+      font-size: 16px;
+      font-weight: 800;
+      display: block;
+    }
+    /* Footer app link */
+    .footer-app-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #3ddc84, #22c55e);
+      color: #0a1a0f !important;
+      font-weight: 700 !important;
+      padding: 7px 14px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 13px;
+      margin-top: 4px;
+      transition: opacity 0.2s, transform 0.15s;
+      box-shadow: 0 3px 10px rgba(61,220,132,0.30);
+    }
+    .footer-app-link:hover { opacity: 0.88; transform: translateY(-1px); }
+    @media (max-width: 640px) {
+      .app-banner-inner { flex-direction: column; align-items: flex-start; }
+      .app-download-btn { width: 100%; justify-content: center; }
+      .app-banner-text .app-banner-title { font-size: 21px; }
+    }
   </style>
 </head>
 <body>
@@ -291,6 +436,29 @@
       <button type="button" class="btn-full success" onclick="placeOrder()">🎉 Confirm &amp; Place Order</button>
     </div>
   </div>
+
+  <!-- Download App Banner -->
+  <section class="app-banner">
+    <div class="app-banner-inner">
+      <div class="app-banner-text">
+        <div class="app-banner-badge">🤖 Now Available</div>
+        <div class="app-banner-title">Shop Smarter with Our<br><span>Android App</span></div>
+        <p>Get exclusive app-only deals, instant order tracking, and a seamless shopping experience — right from your pocket.</p>
+      </div>
+      <a href="https://drive.google.com/uc?export=download&id=1Wbb8LVEkapVUHP7K9BL89DAnMdM6kWo6"
+         class="app-download-btn"
+         target="_blank"
+         rel="noopener noreferrer">
+        <div class="btn-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M17.523 0.686l-1.201 2.204A7.956 7.956 0 0 0 12 2a7.956 7.956 0 0 0-4.322 1.29L6.477.686C5.5 1.486 4.7 2.486 4.1 3.636l1.34 2.46A7.98 7.98 0 0 0 4 10.5h16a7.98 7.98 0 0 0-1.44-4.404l1.34-2.46C19.3 2.486 18.5 1.486 17.523.686zM8.5 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm7 0a1 1 0 1 1 0-2 1 1 0 0 1 0 2zM4 11.5v7a2 2 0 0 0 2 2h1v3a1 1 0 0 0 2 0v-3h6v3a1 1 0 0 0 2 0v-3h1a2 2 0 0 0 2-2v-7H4z"/></svg>
+        </div>
+        <div class="btn-text">
+          <strong>Get the App</strong>
+        </div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      </a>
+    </div>
+  </section>
 
   <footer>
     <div class="footer-inner">
