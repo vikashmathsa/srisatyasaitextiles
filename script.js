@@ -19,7 +19,10 @@ let slideTimer = null;
 // Live product catalogue — loaded from Firestore
 let liveProducts = [];
 
-const categories = ["All", "Men", "Women", "Kids", "Home"];
+const categories = ["All", "Men", "Women", "Kids", "Home", "Daily Wear"];
+
+// Sub-category state for Daily Wear ('' = all daily wear, 'Men' or 'Women' for sub-filter)
+let currentDailySubCat = '';
 
 // =======================
 // Firestore Product Loader
@@ -299,10 +302,42 @@ function renderCategories() {
   categories.forEach(cat => {
     const link = document.createElement('a');
     link.className = `category-link ${cat === currentCategory ? 'active' : ''}`;
-    link.textContent = cat === 'All' ? 'All Products' : cat + "'s";
+
+    if (cat === 'All') {
+      link.textContent = 'All Products';
+    } else if (cat === 'Daily Wear') {
+      link.textContent = '👕 Daily Wear';
+      link.className += ' daily-wear-link';
+    } else {
+      link.textContent = cat + "'s";
+    }
+
     link.onclick = () => filterCategory(cat);
     container.appendChild(link);
   });
+
+  // Render Daily Wear sub-nav if that category is active
+  const subNav = document.getElementById('dailyWearSubNav');
+  if (currentCategory === 'Daily Wear') {
+    if (!subNav) {
+      const sub = document.createElement('div');
+      sub.id = 'dailyWearSubNav';
+      sub.className = 'daily-wear-subnav';
+      sub.innerHTML = `
+        <a class="subnav-link ${currentDailySubCat === '' ? 'active' : ''}" onclick="filterDailyWear('')">All Daily Wear</a>
+        <a class="subnav-link ${currentDailySubCat === 'Men' ? 'active' : ''}" onclick="filterDailyWear('Men')">👔 Men's Daily</a>
+        <a class="subnav-link ${currentDailySubCat === 'Women' ? 'active' : ''}" onclick="filterDailyWear('Women')">👗 Women's Daily</a>
+      `;
+      container.insertAdjacentElement('afterend', sub);
+    } else {
+      subNav.querySelectorAll('.subnav-link').forEach((a, idx) => {
+        const vals = ['', 'Men', 'Women'];
+        a.className = `subnav-link ${currentDailySubCat === vals[idx] ? 'active' : ''}`;
+      });
+    }
+  } else {
+    if (subNav) subNav.remove();
+  }
 }
 
 // =======================
@@ -310,10 +345,14 @@ function renderCategories() {
 // =======================
 function updateCategoryCards() {
   const catalogue = liveProducts;
-  const catMap = { Men: 0, Women: 0, Kids: 0, Home: 0 };
+  const catMap = { Men: 0, Women: 0, Kids: 0, Home: 0, 'Daily Wear': 0 };
 
   catalogue.forEach(p => {
     if (catMap.hasOwnProperty(p.category)) catMap[p.category]++;
+    // Also tally Daily Wear sub-categories
+    if (p.category === 'Daily Wear - Men' || p.category === 'Daily Wear - Women') {
+      catMap['Daily Wear']++;
+    }
   });
 
   document.querySelectorAll('.cat-card').forEach(card => {
@@ -321,11 +360,9 @@ function updateCategoryCards() {
     const countEl = card.querySelector('.cat-count');
     if (!nameEl || !countEl) return;
 
-    // Strip trailing "'s" or "s" to get the key (Men's → Men, Women's → Women, etc.)
     const rawName = nameEl.textContent.trim().replace(/'?s$/i, '');
-    // Capitalise first letter to match catMap keys
     const key = rawName.charAt(0).toUpperCase() + rawName.slice(1).toLowerCase();
-    const normalised = { Men: 'Men', Women: 'Women', Kids: 'Kids', Home: 'Home' }[key] || key;
+    const normalised = { Men: 'Men', Women: 'Women', Kids: 'Kids', Home: 'Home', 'Daily wear': 'Daily Wear' }[key] || key;
 
     if (catMap.hasOwnProperty(normalised)) {
       countEl.textContent = catMap[normalised] + ' Products';
@@ -335,12 +372,31 @@ function updateCategoryCards() {
 
 function filterCategory(category) {
   currentCategory = category;
+  // Reset daily sub-cat whenever switching top-level category
+  if (category !== 'Daily Wear') currentDailySubCat = '';
   renderCategories();
-  document.getElementById('sectionTitle').textContent =
-    category === 'All' ? 'All Products' : category + " Collection";
+  if (category === 'All') {
+    document.getElementById('sectionTitle').textContent = 'All Products';
+  } else if (category === 'Daily Wear') {
+    document.getElementById('sectionTitle').textContent = 'Daily Wear Collection';
+  } else {
+    document.getElementById('sectionTitle').textContent = category + ' Collection';
+  }
   document.getElementById('sortSelect').value = 'default';
   renderProducts();
   scrollToProducts();
+}
+
+function filterDailyWear(subCat) {
+  currentDailySubCat = subCat;
+  renderCategories();
+  if (subCat === '') {
+    document.getElementById('sectionTitle').textContent = 'Daily Wear Collection';
+  } else {
+    document.getElementById('sectionTitle').textContent = subCat + "'s Daily Wear";
+  }
+  document.getElementById('sortSelect').value = 'default';
+  renderProducts();
 }
 
 function sortProducts() {
@@ -363,8 +419,23 @@ function renderProducts(filteredProducts = null) {
   container.innerHTML = '';
 
   const catalogue = liveProducts;
-  let list = filteredProducts ||
-    (currentCategory === 'All' ? [...catalogue] : catalogue.filter(p => p.category === currentCategory));
+
+  let list;
+  if (filteredProducts) {
+    list = filteredProducts;
+  } else if (currentCategory === 'All') {
+    list = [...catalogue];
+  } else if (currentCategory === 'Daily Wear') {
+    if (currentDailySubCat === '') {
+      // Show all daily wear products (both sub-cats)
+      list = catalogue.filter(p => p.category === 'Daily Wear' || p.category === 'Daily Wear - Men' || p.category === 'Daily Wear - Women');
+    } else {
+      // Show specific sub-category
+      list = catalogue.filter(p => p.category === 'Daily Wear - ' + currentDailySubCat || p.category === 'Daily Wear');
+    }
+  } else {
+    list = catalogue.filter(p => p.category === currentCategory);
+  }
 
   const sort = document.getElementById('sortSelect')?.value;
   if (sort === 'price-low') list.sort((a, b) => a.price - b.price);
@@ -410,7 +481,7 @@ function renderProducts(filteredProducts = null) {
           <span class="old-price">₹${product.oldPrice.toLocaleString()}</span>
           <span class="savings">Save ₹${savings}</span>
         </div>
-        ${product.category === 'Men' ? `
+        ${(product.category === 'Men' || product.category === 'Daily Wear - Men') ? `
         <div class="size-selector" id="size-wrap-${product.id}">
           <span class="size-label">Size:</span>
           ${['S','M', 'L', 'XL', 'XXL'].map(s => `
@@ -538,7 +609,7 @@ function addToCart(productId) {
   if (!product || !product.stock) return;
 
   // Require size selection for Men's products
-  if (product.category === 'Men' && !selectedSizes[productId]) {
+  if ((product.category === 'Men' || product.category === 'Daily Wear - Men') && !selectedSizes[productId]) {
     showNotification('📏 Please select a size first!', 'error');
     // Highlight the size selector
     const wrap = document.getElementById('size-wrap-' + productId);
@@ -546,7 +617,7 @@ function addToCart(productId) {
     return;
   }
 
-  const size = product.category === 'Men' ? selectedSizes[productId] : null;
+  const size = (product.category === 'Men' || product.category === 'Daily Wear - Men') ? selectedSizes[productId] : null;
   const cartKey = size ? `${productId}-${size}` : productId;
   const existing = cart.find(item => item.cartKey === cartKey);
   if (existing) {
@@ -860,8 +931,8 @@ function openQuickView(productId) {
           <span class="old-price">₹${product.oldPrice.toLocaleString()}</span>
         </div>
         <p style="color:var(--red);font-weight:600;font-size:14px">🔖 ${discount}% OFF — Save ₹${(product.oldPrice - product.price).toLocaleString()}</p>
-        <p style="color:var(--muted);font-size:13px;line-height:1.6">High quality ${product.category.toLowerCase()}'s textile from Sri Satya Sai's premium collection.</p>
-        ${product.category === 'Men' ? `
+        <p style="color:var(--muted);font-size:13px;line-height:1.6">High quality ${product.category.includes('Daily Wear') ? 'daily wear' : product.category.toLowerCase() + "'s"} textile from Sri Satya Sai's premium collection.</p>
+        ${(product.category === 'Men' || product.category === 'Daily Wear - Men') ? `
         <div class="size-selector" id="size-wrap-qv-${product.id}" style="margin-bottom:12px">
           <span class="size-label">Size:</span>
           ${['S','M','L','XL','XXL'].map(s => `
@@ -922,7 +993,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const catalogue = liveProducts;
         const filtered = catalogue.filter(p =>
           p.name.toLowerCase().includes(term) ||
-          p.category.toLowerCase().includes(term)
+          p.category.toLowerCase().includes(term) ||
+          (p.tags && p.tags.some && p.tags.some(t => t.toLowerCase().includes(term)))
         );
         document.getElementById('sectionTitle').textContent = `Search results for "${e.target.value}"`;
         renderProducts(filtered);

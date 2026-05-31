@@ -412,6 +412,65 @@ header {
   font-weight: 600;
 }
 
+/* Daily Wear special styling */
+.category-link.daily-wear-link {
+  color: var(--gold, #f0b429);
+  font-weight: 600;
+}
+.category-link.daily-wear-link:hover {
+  color: var(--gold, #f0b429);
+  opacity: 0.85;
+}
+.category-link.daily-wear-link.active {
+  color: var(--gold, #f0b429);
+  border-bottom-color: var(--gold, #f0b429);
+}
+
+/* Daily Wear Sub-Navigation */
+.daily-wear-subnav {
+  background: var(--header-bg);
+  border-top: 1px solid var(--border);
+  padding: 6px 5%;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  animation: slideDown 0.22s ease;
+}
+.daily-wear-subnav::-webkit-scrollbar { display: none; }
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.subnav-link {
+  text-decoration: none;
+  color: var(--mid);
+  padding: 6px 16px;
+  cursor: pointer;
+  white-space: nowrap;
+  font-weight: 500;
+  font-size: 13px;
+  border-radius: 20px;
+  border: 1.5px solid var(--border);
+  transition: var(--transition);
+  user-select: none;
+  background: transparent;
+}
+.subnav-link:hover {
+  background: rgba(240,180,41,0.1);
+  border-color: var(--gold, #f0b429);
+  color: var(--gold, #f0b429);
+}
+.subnav-link.active {
+  background: var(--gold, #f0b429);
+  border-color: var(--gold, #f0b429);
+  color: #0f172a;
+  font-weight: 700;
+}
+
 /* ================================
    HERO
 ================================ */
@@ -2030,6 +2089,8 @@ body.dark-mode .product-card::after {
   /* ── Category nav ── */
   .categories { padding: 0 12px; }
   .category-link { padding: 10px 14px; font-size: 13px; }
+  .daily-wear-subnav { padding: 6px 12px; gap: 6px; }
+  .subnav-link { padding: 5px 12px; font-size: 12px; }
 
   /* ── Hero ── */
   .hero { height: 420px; }
