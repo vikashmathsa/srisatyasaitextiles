@@ -2073,8 +2073,8 @@ body.dark-mode .product-card::after {
     padding: 10px 16px;
     gap: 8px;
   }
-  .logo { order: 1; }
-  .header-actions { order: 2; margin-left: auto; }
+  .logo { order: 1; flex: 0 0 auto; }
+  .header-actions { order: 2; margin-left: auto; flex-shrink: 0; }
   .search-bar {
     order: 3;
     flex: 0 0 100%;
@@ -2094,6 +2094,7 @@ body.dark-mode .product-card::after {
 
   /* ── Hero ── */
   .hero { height: 420px; }
+  .hero-content { padding: 0 20px; }
   .hero-content h1 { font-size: 32px; }
   .hero-content p { font-size: 15px; margin-bottom: 24px; }
   .hero-nav { width: 40px; height: 40px; font-size: 20px; }

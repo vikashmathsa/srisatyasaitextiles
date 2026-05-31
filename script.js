@@ -38,7 +38,6 @@ function loadLiveProducts(forceRefresh = false) {
     // Cache still fresh — just re-render
     renderCategories();
     renderProducts();
-    updateCategoryCards();
     return;
   }
   const db = firebase.firestore();
@@ -56,7 +55,6 @@ function loadLiveProducts(forceRefresh = false) {
     } catch {}
     renderCategories();
     renderProducts();
-    updateCategoryCards();
     updateWishlistUI();
     updateCartCount();
   }).catch(err => {
@@ -306,7 +304,7 @@ function renderCategories() {
     link.className = `category-link ${cat === currentCategory ? 'active' : ''}`;
 
     if (cat === 'Daily Wear') {
-      link.textContent = '👕 Daily Wear';
+      link.textContent = 'Daily Wear';
       link.className += ' daily-wear-link';
     } else {
       link.textContent = cat + "'s";
@@ -362,36 +360,6 @@ function renderCategories() {
   } else {
     if (subNav) subNav.remove();
   }
-}
-
-// =======================
-// Dynamic Category Card Counts
-// =======================
-function updateCategoryCards() {
-  const catalogue = liveProducts;
-  const catMap = { Men: 0, Women: 0, Kids: 0, Home: 0, 'Daily Wear': 0 };
-
-  catalogue.forEach(p => {
-    if (catMap.hasOwnProperty(p.category)) catMap[p.category]++;
-    // Also tally Daily Wear sub-categories
-    if (p.category === 'Daily Wear - Men' || p.category === 'Daily Wear - Women') {
-      catMap['Daily Wear']++;
-    }
-  });
-
-  document.querySelectorAll('.cat-card').forEach(card => {
-    const nameEl = card.querySelector('.cat-name');
-    const countEl = card.querySelector('.cat-count');
-    if (!nameEl || !countEl) return;
-
-    const rawName = nameEl.textContent.trim().replace(/'?s$/i, '');
-    const key = rawName.charAt(0).toUpperCase() + rawName.slice(1).toLowerCase();
-    const normalised = { Men: 'Men', Women: 'Women', Kids: 'Kids', Home: 'Home', 'Daily wear': 'Daily Wear' }[key] || key;
-
-    if (catMap.hasOwnProperty(normalised)) {
-      countEl.textContent = catMap[normalised] + ' Products';
-    }
-  });
 }
 
 function filterCategory(category) {
