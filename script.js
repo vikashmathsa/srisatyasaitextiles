@@ -12,19 +12,17 @@ let wishlist = (() => {
     return ids; // temporarily stores IDs; swapped to full objects post-load
   } catch { return []; }
 })();
-let currentCategory = "Men";
+let currentCategory = "All";
 let currentSlide = 0;
 let slideTimer = null;
 
 // Live product catalogue — loaded from Firestore
 let liveProducts = [];
 
-const categories = ["Men", "Women", "Kids", "Home", "Daily Wear"];
+const categories = ["All", "Men", "Women", "Kids", "Home", "Daily Wear"];
 
 // Sub-category state for Daily Wear ('' = all daily wear, 'Men' or 'Women' for sub-filter)
 let currentDailySubCat = '';
-// Sub-category state for Men ('' = all men, 'T-Shirts', 'Shirts', 'Pants')
-let currentMenSubCat = '';
 
 // =======================
 // Firestore Product Loader
@@ -38,6 +36,7 @@ function loadLiveProducts(forceRefresh = false) {
     // Cache still fresh — just re-render
     renderCategories();
     renderProducts();
+    updateCategoryCards();
     return;
   }
   const db = firebase.firestore();
@@ -55,6 +54,7 @@ function loadLiveProducts(forceRefresh = false) {
     } catch {}
     renderCategories();
     renderProducts();
+    updateCategoryCards();
     updateWishlistUI();
     updateCartCount();
   }).catch(err => {
@@ -303,8 +303,10 @@ function renderCategories() {
     const link = document.createElement('a');
     link.className = `category-link ${cat === currentCategory ? 'active' : ''}`;
 
-    if (cat === 'Daily Wear') {
-      link.textContent = 'Daily Wear';
+    if (cat === 'All') {
+      link.textContent = 'All Products';
+    } else if (cat === 'Daily Wear') {
+      link.textContent = '👕 Daily Wear';
       link.className += ' daily-wear-link';
     } else {
       link.textContent = cat + "'s";
@@ -313,30 +315,6 @@ function renderCategories() {
     link.onclick = () => filterCategory(cat);
     container.appendChild(link);
   });
-
-  // Render Men sub-nav if Men category is active
-  const menSubNav = document.getElementById('menSubNav');
-  if (currentCategory === 'Men') {
-    if (!menSubNav) {
-      const sub = document.createElement('div');
-      sub.id = 'menSubNav';
-      sub.className = 'daily-wear-subnav';
-      sub.innerHTML = `
-        <a class="subnav-link ${currentMenSubCat === '' ? 'active' : ''}" onclick="filterMen('')">All Men's</a>
-        <a class="subnav-link ${currentMenSubCat === 'T-Shirts' ? 'active' : ''}" onclick="filterMen('T-Shirts')">👕 T-Shirts</a>
-        <a class="subnav-link ${currentMenSubCat === 'Shirts' ? 'active' : ''}" onclick="filterMen('Shirts')">👔 Shirts</a>
-        <a class="subnav-link ${currentMenSubCat === 'Pants' ? 'active' : ''}" onclick="filterMen('Pants')">👖 Pants</a>
-      `;
-      container.insertAdjacentElement('afterend', sub);
-    } else {
-      menSubNav.querySelectorAll('.subnav-link').forEach((a, idx) => {
-        const vals = ['', 'T-Shirts', 'Shirts', 'Pants'];
-        a.className = `subnav-link ${currentMenSubCat === vals[idx] ? 'active' : ''}`;
-      });
-    }
-  } else {
-    if (menSubNav) menSubNav.remove();
-  }
 
   // Render Daily Wear sub-nav if that category is active
   const subNav = document.getElementById('dailyWearSubNav');
@@ -362,16 +340,45 @@ function renderCategories() {
   }
 }
 
+// =======================
+// Dynamic Category Card Counts
+// =======================
+function updateCategoryCards() {
+  const catalogue = liveProducts;
+  const catMap = { Men: 0, Women: 0, Kids: 0, Home: 0, 'Daily Wear': 0 };
+
+  catalogue.forEach(p => {
+    if (catMap.hasOwnProperty(p.category)) catMap[p.category]++;
+    // Also tally Daily Wear sub-categories
+    if (p.category === 'Daily Wear - Men' || p.category === 'Daily Wear - Women') {
+      catMap['Daily Wear']++;
+    }
+  });
+
+  document.querySelectorAll('.cat-card').forEach(card => {
+    const nameEl = card.querySelector('.cat-name');
+    const countEl = card.querySelector('.cat-count');
+    if (!nameEl || !countEl) return;
+
+    const rawName = nameEl.textContent.trim().replace(/'?s$/i, '');
+    const key = rawName.charAt(0).toUpperCase() + rawName.slice(1).toLowerCase();
+    const normalised = { Men: 'Men', Women: 'Women', Kids: 'Kids', Home: 'Home', 'Daily wear': 'Daily Wear' }[key] || key;
+
+    if (catMap.hasOwnProperty(normalised)) {
+      countEl.textContent = catMap[normalised] + ' Products';
+    }
+  });
+}
+
 function filterCategory(category) {
   currentCategory = category;
-  // Reset sub-cats whenever switching top-level category
+  // Reset daily sub-cat whenever switching top-level category
   if (category !== 'Daily Wear') currentDailySubCat = '';
-  if (category !== 'Men') currentMenSubCat = '';
   renderCategories();
-  if (category === 'Daily Wear') {
+  if (category === 'All') {
+    document.getElementById('sectionTitle').textContent = 'All Products';
+  } else if (category === 'Daily Wear') {
     document.getElementById('sectionTitle').textContent = 'Daily Wear Collection';
-  } else if (category === 'Men') {
-    document.getElementById('sectionTitle').textContent = "Men's Collection";
   } else {
     document.getElementById('sectionTitle').textContent = category + ' Collection';
   }
@@ -387,18 +394,6 @@ function filterDailyWear(subCat) {
     document.getElementById('sectionTitle').textContent = 'Daily Wear Collection';
   } else {
     document.getElementById('sectionTitle').textContent = subCat + "'s Daily Wear";
-  }
-  document.getElementById('sortSelect').value = 'default';
-  renderProducts();
-}
-
-function filterMen(subCat) {
-  currentMenSubCat = subCat;
-  renderCategories();
-  if (subCat === '') {
-    document.getElementById('sectionTitle').textContent = "Men's Collection";
-  } else {
-    document.getElementById('sectionTitle').textContent = "Men's " + subCat;
   }
   document.getElementById('sortSelect').value = 'default';
   renderProducts();
@@ -428,12 +423,8 @@ function renderProducts(filteredProducts = null) {
   let list;
   if (filteredProducts) {
     list = filteredProducts;
-  } else if (currentCategory === 'Men') {
-    if (currentMenSubCat === '') {
-      list = catalogue.filter(p => p.category === 'Men' || p.category === 'Men - T-Shirts' || p.category === 'Men - Shirts' || p.category === 'Men - Pants');
-    } else {
-      list = catalogue.filter(p => p.category === 'Men - ' + currentMenSubCat || p.category === 'Men');
-    }
+  } else if (currentCategory === 'All') {
+    list = [...catalogue];
   } else if (currentCategory === 'Daily Wear') {
     if (currentDailySubCat === '') {
       // Show all daily wear products (both sub-cats)
@@ -1039,9 +1030,7 @@ function clearSearch() {
   if (input) input.value = '';
   if (clearBtn) clearBtn.style.display = 'none';
   document.getElementById('sectionTitle').textContent =
-    currentCategory === 'Daily Wear' ? 'Daily Wear Collection' :
-    currentCategory === 'Men' ? "Men's Collection" :
-    currentCategory + ' Collection';
+    currentCategory === 'All' ? 'All Products' : currentCategory + ' Collection';
   renderProducts();
 }
 
@@ -1131,322 +1120,3 @@ document.addEventListener('keydown', (e) => {
     document.getElementById('profileDropdown')?.remove();
   }
 });
-
-// ===================================
-// ENHANCEMENTS — New Features
-// ===================================
-
-// ── Sticky header shrink on scroll ──
-(function() {
-  const header = document.getElementById('mainHeader');
-  if (!header) return;
-  let ticking = false;
-  window.addEventListener('scroll', () => {
-    if (!ticking) {
-      requestAnimationFrame(() => {
-        if (window.scrollY > 60) header.classList.add('scrolled');
-        else header.classList.remove('scrolled');
-        ticking = false;
-      });
-      ticking = true;
-    }
-  }, { passive: true });
-})();
-
-// ── Hero sale countdown timer ──
-(function() {
-  function updateCountdown() {
-    const now = new Date();
-    // End at midnight today + 1 day (makes it feel urgent)
-    const end = new Date();
-    end.setHours(23, 59, 59, 999);
-    const diff = Math.max(0, end - now);
-    const h = Math.floor(diff / 3600000);
-    const m = Math.floor((diff % 3600000) / 60000);
-    const s = Math.floor((diff % 60000) / 1000);
-    const pad = n => String(n).padStart(2, '0');
-    const elH = document.getElementById('cdHours');
-    const elM = document.getElementById('cdMins');
-    const elS = document.getElementById('cdSecs');
-    if (elH) elH.textContent = pad(h);
-    if (elM) elM.textContent = pad(m);
-    if (elS) elS.textContent = pad(s);
-  }
-  updateCountdown();
-  setInterval(updateCountdown, 1000);
-})();
-
-// ── Reveal-on-scroll using IntersectionObserver ──
-(function() {
-  const revealEls = document.querySelectorAll('.reveal-on-scroll');
-  if (!revealEls.length) return;
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.12 });
-  revealEls.forEach(el => observer.observe(el));
-})();
-
-// ── Ripple effect on product card clicks ──
-document.addEventListener('click', function(e) {
-  const card = e.target.closest('.product-card');
-  if (!card) return;
-  const rect = card.getBoundingClientRect();
-  const ripple = document.createElement('div');
-  ripple.className = 'ripple';
-  const size = Math.max(rect.width, rect.height) * 0.6;
-  ripple.style.cssText = `
-    width: ${size}px; height: ${size}px;
-    left: ${e.clientX - rect.left - size/2}px;
-    top: ${e.clientY - rect.top - size/2}px;
-  `;
-  card.appendChild(ripple);
-  setTimeout(() => ripple.remove(), 700);
-});
-
-// ── Voice Search (Web Speech API) ──
-function startVoiceSearch() {
-  const btn = document.getElementById('voiceSearchBtn');
-  const input = document.getElementById('searchInput');
-  if (!btn || !input) return;
-
-  if (!('SpeechRecognition' in window) && !('webkitSpeechRecognition' in window)) {
-    showNotification('🎤 Voice search not supported in this browser', 'error');
-    return;
-  }
-
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  const recognition = new SR();
-  recognition.lang = 'en-IN';
-  recognition.interimResults = false;
-  recognition.maxAlternatives = 1;
-
-  btn.classList.add('listening');
-  btn.textContent = '🔴';
-
-  recognition.onresult = (e) => {
-    const transcript = e.results[0][0].transcript;
-    input.value = transcript;
-    input.dispatchEvent(new Event('input'));
-    filterBySearch();
-    showNotification(`🎤 Searching for "${transcript}"`, 'info');
-  };
-
-  recognition.onerror = () => {
-    showNotification('🎤 Couldn\'t hear you, try again', 'error');
-  };
-
-  recognition.onend = () => {
-    btn.classList.remove('listening');
-    btn.textContent = '🎤';
-  };
-
-  recognition.start();
-}
-
-// ── Search autocomplete suggestions ──
-const SEARCH_CATEGORIES = [
-  { label: 'Sarees', cat: 'Women', icon: '👘' },
-  { label: 'Kurtis', cat: 'Women', icon: '👗' },
-  { label: 'Shirts', cat: 'Men', icon: '👕' },
-  { label: 'T-Shirts', cat: 'Men', icon: '👕' },
-  { label: 'Pants', cat: 'Men', icon: '👖' },
-  { label: 'Kids Wear', cat: 'Kids', icon: '🧒' },
-  { label: 'Bedsheets', cat: 'Home', icon: '🛏️' },
-  { label: 'Daily Wear', cat: 'Daily Wear', icon: '☀️' },
-  { label: 'Summer Collection', cat: 'Women', icon: '☀️' },
-  { label: 'Cotton Sarees', cat: 'Women', icon: '👘' },
-  { label: 'Linen Shirts', cat: 'Men', icon: '👕' },
-  { label: 'Towels', cat: 'Home', icon: '🛁' },
-];
-
-(function() {
-  const input = document.getElementById('searchInput');
-  const suggestBox = document.getElementById('searchSuggestions');
-  if (!input || !suggestBox) return;
-
-  function showSuggestions(query) {
-    if (!query || query.length < 2) { suggestBox.style.display = 'none'; return; }
-    const q = query.toLowerCase();
-    // Also include live products
-    const productMatches = (liveProducts || [])
-      .filter(p => p.name && p.name.toLowerCase().includes(q))
-      .slice(0, 3)
-      .map(p => ({ label: p.name, cat: p.category, icon: '🛍️' }));
-    const catMatches = SEARCH_CATEGORIES.filter(s => s.label.toLowerCase().includes(q));
-    const combined = [...productMatches, ...catMatches].slice(0, 6);
-    if (!combined.length) { suggestBox.style.display = 'none'; return; }
-
-    suggestBox.innerHTML = combined.map(s => `
-      <div class="search-suggestion-item" onclick="applySuggestion('${s.label.replace(/'/g,"\\'")}','${s.cat}')">
-        <span class="search-suggestion-icon">${s.icon}</span>
-        <span class="search-suggestion-label">${s.label}</span>
-        <span class="search-suggestion-cat">${s.cat}</span>
-      </div>
-    `).join('');
-    suggestBox.style.display = 'block';
-  }
-
-  input.addEventListener('input', e => showSuggestions(e.target.value));
-  input.addEventListener('focus', e => { if(e.target.value.length >= 2) showSuggestions(e.target.value); });
-  document.addEventListener('click', e => {
-    if (!e.target.closest('.search-bar-wrap')) suggestBox.style.display = 'none';
-  });
-})();
-
-function applySuggestion(label, cat) {
-  const input = document.getElementById('searchInput');
-  const suggestBox = document.getElementById('searchSuggestions');
-  if (input) { input.value = label; input.dispatchEvent(new Event('input')); }
-  if (suggestBox) suggestBox.style.display = 'none';
-  if (cat && typeof filterCategory === 'function') filterCategory(cat);
-  if (typeof scrollToProducts === 'function') scrollToProducts();
-}
-
-// ── Shipping progress bar in cart ──
-function updateShippingProgress() {
-  const subtotal = cart.reduce((s, i) => s + (i.price * (i.qty || 1)), 0);
-  const FREE_SHIPPING_THRESHOLD = 999;
-  const pct = Math.min(100, (subtotal / FREE_SHIPPING_THRESHOLD) * 100);
-  const fill = document.getElementById('shippingProgressFill');
-  const label = document.getElementById('shippingProgressLabel');
-  const wrap = document.getElementById('shippingProgressWrap');
-  if (!fill || !label || !wrap) return;
-  fill.style.width = pct + '%';
-  if (subtotal >= FREE_SHIPPING_THRESHOLD) {
-    label.innerHTML = '🎉 <strong>Free shipping unlocked!</strong>';
-    fill.style.background = 'linear-gradient(90deg, #16a34a, #22c55e)';
-  } else {
-    const remaining = FREE_SHIPPING_THRESHOLD - subtotal;
-    label.innerHTML = `Add <strong>₹${remaining.toLocaleString('en-IN')}</strong> more for free shipping! 🚚`;
-    fill.style.background = '';
-  }
-}
-
-// ── Cart popup animation ──
-function animateCartIcon() {
-  const icon = document.getElementById('cart-icon');
-  if (!icon) return;
-  icon.classList.remove('cart-pop');
-  void icon.offsetWidth; // force reflow
-  icon.classList.add('cart-pop');
-  setTimeout(() => icon.classList.remove('cart-pop'), 600);
-}
-
-// ── Products loading bar ──
-function showProductsLoading(show) {
-  const bar = document.getElementById('productsLoadingBar');
-  if (bar) bar.classList.toggle('active', show);
-}
-
-// ── Touch swipe support for hero slider ──
-(function() {
-  const hero = document.querySelector('.hero');
-  if (!hero) return;
-  let startX = 0, startY = 0;
-  hero.addEventListener('touchstart', e => {
-    startX = e.touches[0].clientX;
-    startY = e.touches[0].clientY;
-  }, { passive: true });
-  hero.addEventListener('touchend', e => {
-    const dx = e.changedTouches[0].clientX - startX;
-    const dy = e.changedTouches[0].clientY - startY;
-    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
-      if (typeof changeSlide === 'function') changeSlide(dx < 0 ? 1 : -1, true);
-    }
-  }, { passive: true });
-})();
-
-// ── Cart swipe to remove on touch ──
-(function() {
-  let touchStartX = 0;
-  document.addEventListener('touchstart', e => {
-    const item = e.target.closest('.cart-item');
-    if (item) touchStartX = e.touches[0].clientX;
-  }, { passive: true });
-  document.addEventListener('touchend', e => {
-    const item = e.target.closest('.cart-item');
-    if (!item) return;
-    const dx = e.changedTouches[0].clientX - touchStartX;
-    if (dx < -80) {
-      item.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
-      item.style.transform = 'translateX(-100%)';
-      item.style.opacity = '0';
-      const removeBtn = item.querySelector('.remove-btn');
-      if (removeBtn) setTimeout(() => removeBtn.click(), 300);
-    }
-  }, { passive: true });
-})();
-
-// ── Keyboard shortcut: "/" to focus search ──
-document.addEventListener('keydown', e => {
-  if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
-    e.preventDefault();
-    const input = document.getElementById('searchInput');
-    if (input) { input.focus(); input.select(); }
-  }
-  // Escape to close suggestions
-  if (e.key === 'Escape') {
-    const sug = document.getElementById('searchSuggestions');
-    if (sug) sug.style.display = 'none';
-  }
-});
-
-// ── Patch updateCartCount to also update shipping progress & animate icon ──
-const _origUpdateCartCount = window.updateCartCount;
-window.updateCartCount = function() {
-  if (typeof _origUpdateCartCount === 'function') _origUpdateCartCount();
-  updateShippingProgress();
-};
-
-// ── Show loading bar when loading products ──
-const _origLoadLiveProducts = window.loadLiveProducts;
-window.loadLiveProducts = function(forceRefresh) {
-  showProductsLoading(true);
-  const origRenderProducts = window.renderProducts;
-  window.renderProducts = function() {
-    if (typeof origRenderProducts === 'function') origRenderProducts();
-    showProductsLoading(false);
-    window.renderProducts = origRenderProducts; // restore
-  };
-  if (typeof _origLoadLiveProducts === 'function') _origLoadLiveProducts(forceRefresh);
-};
-
-// ── Mobile bottom nav: highlight active item ──
-(function() {
-  const navItems = document.querySelectorAll('.mobile-nav-item');
-  navItems.forEach(item => {
-    item.addEventListener('click', () => {
-      navItems.forEach(n => n.classList.remove('active'));
-      item.classList.add('active');
-    });
-  });
-})();
-
-// ── PWA install prompt ──
-let deferredPrompt = null;
-window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault();
-  deferredPrompt = e;
-  // Show subtle install banner after 30s if user has interacted
-  setTimeout(() => {
-    if (deferredPrompt) {
-      showNotification('📲 Add to Home Screen for the best experience!', 'info');
-    }
-  }, 30000);
-});
-
-// ── Haptic feedback on add-to-cart (mobile) ──
-function triggerHaptic() {
-  if (navigator.vibrate) navigator.vibrate(40);
-}
-
-// Run shipping progress on init
-document.addEventListener('DOMContentLoaded', () => {
-  updateShippingProgress();
-});
-

@@ -243,16 +243,27 @@ header {
   text-decoration: none;
 }
 
-
+.logo-img {
+  height: 52px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+  border-radius: 10px;
+}
 
 .logo-name {
   font-family: var(--font-display);
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 700;
   color: var(--blue);
   line-height: 1.1;
-  white-space: nowrap;
-  letter-spacing: 0.01em;
+}
+
+.logo-sub {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+  font-weight: 600;
 }
 
 .search-bar {
@@ -267,12 +278,6 @@ header {
   padding: 0 16px;
   gap: 10px;
   transition: var(--transition);
-}
-
-.search-bar-wrap {
-  position: relative;
-  flex: 1;
-  min-width: 0;
 }
 
 .search-bar:focus-within {
@@ -1771,20 +1776,6 @@ body.dark-mode .footer-logo { color: #f1f5f9; }
   line-height: 1.6;
 }
 
-.footer-contact-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-}
-
-.footer-contact-icon {
-  flex-shrink: 0;
-  width: 20px;
-  text-align: center;
-  margin-top: 2px;
-  font-style: normal;
-}
-
 .contact-btn {
   display: inline-flex;
   align-items: center;
@@ -2082,20 +2073,18 @@ body.dark-mode .product-card::after {
     padding: 10px 16px;
     gap: 8px;
   }
-  .logo { order: 1; flex: 0 0 auto; }
-  .header-actions { order: 2; margin-left: auto; flex-shrink: 0; }
-  .search-bar-wrap {
+  .logo { order: 1; }
+  .header-actions { order: 2; margin-left: auto; }
+  .search-bar {
     order: 3;
     flex: 0 0 100%;
-    width: 100%;
     margin-top: 2px;
-  }
-  .search-bar-wrap .search-bar {
-    width: 100%;
   }
   .action-label { display: none; }
   .action-btn { padding: 6px 8px; }
-  .logo-name { font-size: 18px; }
+  .logo-name { font-size: 17px; }
+  .logo-sub { font-size: 9px; }
+  .logo-img { height: 44px; }
 
   /* ── Category nav ── */
   .categories { padding: 0 12px; }
@@ -2105,7 +2094,6 @@ body.dark-mode .product-card::after {
 
   /* ── Hero ── */
   .hero { height: 420px; }
-  .hero-content { padding: 0 20px; }
   .hero-content h1 { font-size: 32px; }
   .hero-content p { font-size: 15px; margin-bottom: 24px; }
   .hero-nav { width: 40px; height: 40px; font-size: 20px; }
@@ -2173,7 +2161,9 @@ body.dark-mode .product-card::after {
 
   /* ── Header ── */
   .main-header { padding: 8px 12px; gap: 6px; }
-  .logo-name { font-size: 16px; }
+  .logo-name { font-size: 15px; }
+  .logo-sub { display: none; }
+  .logo-img { height: 38px; }
   .theme-toggle { width: 36px; height: 36px; font-size: 16px; min-width: 40px; min-height: 40px; }
   .action-btn { padding: 5px 7px; min-width: 40px; min-height: 40px; }
   .action-icon { font-size: 20px; }
@@ -2249,7 +2239,7 @@ body.dark-mode .product-card::after {
   .product-info h3 { font-size: 12px; }
   .price { font-size: 15px; }
   .add-btn { font-size: 11px; padding: 9px 6px; }
-  .logo-name { font-size: 15px; }
+  .logo-name { font-size: 14px; }
   .cart-item img { width: 60px; height: 60px; }
 }
 
@@ -2303,15 +2293,14 @@ body.dark-mode .product-card::after {
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.04em;
-  padding: 0 14px;
+  padding: 7px 14px;
   border-radius: 8px;
   text-decoration: none;
   border: none;
   cursor: pointer;
   transition: opacity 0.2s, transform 0.15s;
   white-space: nowrap;
-  height: 44px;
-  min-height: 44px;
+  min-height: 36px;
 }
 
 .about-admin-btn:hover { opacity: 0.88; transform: translateY(-1px); }
@@ -2459,752 +2448,6 @@ body.dark-mode .product-card::after {
    MOBILE SEARCH EXPAND
 ================================ */
 @media (max-width: 480px) {
-  .search-bar-wrap .search-bar { border-radius: 12px; }
+  .search-bar { border-radius: 12px; }
   .search-bar input::placeholder { font-size: 14px; }
 }
-
-/* ================================
-   ENHANCEMENTS — New Features
-================================ */
-
-/* ── Animated top-bar ticker ── */
-.top-bar-inner {
-  display: flex;
-  white-space: nowrap;
-  gap: 0;
-  padding: 0;
-  justify-content: flex-start;
-  animation: ticker 28s linear infinite;
-  flex-wrap: nowrap;
-}
-
-@keyframes ticker {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-.top-bar-inner:hover { animation-play-state: paused; }
-
-.top-bar {
-  overflow: hidden;
-  cursor: default;
-}
-
-/* ── Sticky header shrink on scroll ── */
-header.scrolled .main-header {
-  padding-top: 8px;
-  padding-bottom: 8px;
-}
-
-header.scrolled .logo-img {
-  height: 40px;
-  transition: height 0.3s ease;
-}
-
-header {
-  transition: box-shadow 0.3s ease, background 0.4s ease;
-}
-
-/* ── Product card — shimmer skeleton loader ── */
-.product-card.loading {
-  pointer-events: none;
-}
-.product-card.loading .product-img-wrap::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, var(--bg) 25%, var(--border) 37%, var(--bg) 63%);
-  background-size: 400% 100%;
-  animation: skeleton 1.4s ease infinite;
-  z-index: 5;
-}
-
-@keyframes skeleton {
-  0%   { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-/* ── Floating promo ribbon ── */
-.promo-ribbon {
-  position: absolute;
-  top: 18px;
-  right: -28px;
-  background: var(--orange);
-  color: white;
-  font-size: 10px;
-  font-weight: 800;
-  padding: 4px 32px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  transform: rotate(35deg);
-  z-index: 5;
-  box-shadow: 0 2px 8px rgba(234,88,12,0.4);
-}
-
-/* ── Category pill active glow ── */
-.category-link.active {
-  text-shadow: 0 0 12px rgba(29,78,216,0.4);
-}
-
-/* ── Search bar voice search button ── */
-.search-voice-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--muted);
-  font-size: 18px;
-  padding: 4px;
-  min-width: 32px;
-  min-height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: var(--transition);
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.search-voice-btn:hover { color: var(--blue); background: var(--blue-light); }
-.search-voice-btn.listening { color: var(--red); animation: pulse-voice 1s ease infinite; }
-
-@keyframes pulse-voice {
-  0%, 100% { transform: scale(1); }
-  50%       { transform: scale(1.2); }
-}
-
-/* ── "Trending Now" product badge ── */
-.trending-badge {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  background: linear-gradient(135deg, #f59e0b, #ea580c);
-  color: white;
-  font-size: 10px;
-  font-weight: 800;
-  padding: 3px 9px;
-  border-radius: 20px;
-  z-index: 2;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  box-shadow: 0 2px 8px rgba(234,88,12,0.4);
-}
-
-/* ── Product card — tap ripple effect ── */
-.product-card {
-  overflow: hidden;
-}
-
-.ripple {
-  position: absolute;
-  border-radius: 50%;
-  background: rgba(29,78,216,0.2);
-  transform: scale(0);
-  animation: ripple-anim 0.6s linear;
-  pointer-events: none;
-  z-index: 10;
-}
-
-@keyframes ripple-anim {
-  to { transform: scale(4); opacity: 0; }
-}
-
-/* ── Search suggestions dropdown ── */
-.search-suggestions {
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 0; right: 0;
-  background: var(--glass-bg-strong);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-lg);
-  z-index: 400;
-  overflow: hidden;
-  animation: dropdownIn 0.18s ease;
-  max-height: 280px;
-  overflow-y: auto;
-}
-
-.search-suggestion-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 16px;
-  cursor: pointer;
-  font-size: 14px;
-  color: var(--mid);
-  transition: background 0.15s ease;
-  border-bottom: 1px solid var(--border);
-}
-
-.search-suggestion-item:last-child { border-bottom: none; }
-.search-suggestion-item:hover { background: var(--bg); color: var(--blue); }
-.search-suggestion-icon { color: var(--muted); font-size: 14px; }
-.search-suggestion-label { flex: 1; }
-.search-suggestion-cat {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--blue);
-  background: var(--blue-light);
-  padding: 2px 8px;
-  border-radius: 20px;
-}
-
-/* ── Back-in-stock label ── */
-.back-in-stock-badge {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  background: linear-gradient(135deg, #22c55e, #16a34a);
-  color: white;
-  font-size: 10px;
-  font-weight: 700;
-  padding: 3px 9px;
-  border-radius: 6px;
-  z-index: 2;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-/* ── "Compare" product feature ── */
-.compare-bar {
-  position: fixed;
-  bottom: calc(64px + var(--safe-bottom));
-  left: 50%;
-  transform: translateX(-50%) translateY(120%);
-  background: var(--dark);
-  color: white;
-  padding: 12px 24px;
-  border-radius: 50px;
-  font-size: 14px;
-  font-weight: 600;
-  z-index: 700;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.35);
-  transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
-  white-space: nowrap;
-}
-
-.compare-bar.visible {
-  transform: translateX(-50%) translateY(0);
-}
-
-.compare-bar-btn {
-  background: var(--blue);
-  color: white;
-  border: none;
-  padding: 6px 18px;
-  border-radius: 50px;
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: var(--transition);
-  font-family: var(--font-body);
-  min-height: 36px;
-}
-
-.compare-bar-btn:hover { background: var(--blue-dark); }
-
-/* ── Filter chip row ── */
-.filter-chips {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 18px;
-  align-items: center;
-}
-
-.filter-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: var(--blue-light);
-  border: 1.5px solid var(--blue);
-  color: var(--blue);
-  font-size: 13px;
-  font-weight: 600;
-  padding: 5px 12px;
-  border-radius: 50px;
-  cursor: pointer;
-  transition: var(--transition);
-  user-select: none;
-  min-height: 36px;
-  animation: chipIn 0.2s ease;
-}
-
-@keyframes chipIn {
-  from { opacity: 0; transform: scale(0.8); }
-  to   { opacity: 1; transform: scale(1); }
-}
-
-.filter-chip:hover { background: var(--blue); color: white; }
-
-.filter-chip-close {
-  font-size: 14px;
-  font-weight: 700;
-  line-height: 1;
-  margin-left: 2px;
-}
-
-/* ── Price range slider (filter) ── */
-.price-filter-wrap {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background: var(--bg);
-  border: 1.5px solid var(--border);
-  border-radius: 50px;
-  padding: 6px 18px;
-  min-height: 44px;
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--mid);
-  transition: var(--transition);
-  user-select: none;
-  white-space: nowrap;
-}
-
-.price-filter-wrap:hover { border-color: var(--blue); color: var(--blue); }
-
-/* ── Cart item swipe-to-delete indicator ── */
-.cart-item {
-  position: relative;
-  overflow: hidden;
-}
-
-.cart-item-swipe-hint {
-  position: absolute;
-  right: 0; top: 0; bottom: 0;
-  width: 70px;
-  background: var(--red);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 20px;
-  transform: translateX(100%);
-  transition: transform 0.25s ease;
-  pointer-events: none;
-}
-
-/* ── "New" badge for recently added products ── */
-.new-badge {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  background: linear-gradient(135deg, var(--blue), #7c3aed);
-  color: white;
-  font-size: 10px;
-  font-weight: 800;
-  padding: 3px 10px;
-  border-radius: 20px;
-  z-index: 2;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-/* ── Smooth page-transition overlay ── */
-.page-transition-overlay {
-  position: fixed;
-  inset: 0;
-  background: var(--dark);
-  z-index: 99999;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-/* ── Pulsing cart icon when item added ── */
-@keyframes cartPop {
-  0%   { transform: scale(1); }
-  30%  { transform: scale(1.4); }
-  60%  { transform: scale(0.9); }
-  100% { transform: scale(1); }
-}
-
-.cart-pop { animation: cartPop 0.5s ease; }
-
-/* ── Wishlist heart animation ── */
-@keyframes heartBeat {
-  0%   { transform: scale(1); }
-  25%  { transform: scale(1.3); }
-  50%  { transform: scale(1); }
-  75%  { transform: scale(1.15); }
-  100% { transform: scale(1); }
-}
-
-.heart-beat { animation: heartBeat 0.5s ease; }
-
-/* ── Floating "count" badge for mobile bottom nav ── */
-.mobile-nav-badge {
-  font-feature-settings: 'tnum';
-}
-
-/* ── Section-level loading state ── */
-.products-loading-bar {
-  height: 3px;
-  background: linear-gradient(90deg, var(--blue), var(--orange), var(--blue));
-  background-size: 200% 100%;
-  animation: loading-bar 1.2s linear infinite;
-  border-radius: 3px;
-  margin-bottom: 20px;
-  display: none;
-}
-
-.products-loading-bar.active { display: block; }
-
-@keyframes loading-bar {
-  0%   { background-position: 100% 0; }
-  100% { background-position: -100% 0; }
-}
-
-/* ── "Add to cart" button pulse confirm ── */
-@keyframes btnConfirm {
-  0%   { box-shadow: 0 0 0 0 rgba(22,163,74,0.6); }
-  70%  { box-shadow: 0 0 0 14px rgba(22,163,74,0); }
-  100% { box-shadow: 0 0 0 0 rgba(22,163,74,0); }
-}
-
-.add-btn.confirmed { animation: btnConfirm 0.6s ease; }
-
-/* ================================
-   MOBILE FIXES & ENHANCEMENTS
-================================ */
-
-/* Fix top-bar placement — must come BEFORE header, not after body close */
-.top-bar {
-  position: relative;
-  z-index: 1;
-}
-
-/* Sticky header z-index above ticker */
-header {
-  z-index: 500;
-}
-
-/* Mobile: hero slide fully responsive height */
-@media (max-width: 480px) {
-  .hero { height: clamp(280px, 55vw, 360px); }
-}
-
-/* Prevent text overflow in product cards on small screens */
-.product-info h3 {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-}
-
-/* Mobile modal scroll fix — ensure keyboard doesn't push modal off-screen */
-@media (max-width: 768px) {
-  .modal-overlay {
-    align-items: flex-end;
-    padding: 0;
-  }
-  .modal-box {
-    width: 100%;
-    max-width: 100%;
-    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-    max-height: 90dvh;
-    padding-bottom: calc(24px + var(--safe-bottom));
-  }
-  .checkout-box { max-width: 100%; }
-  
-  /* Quick view — full height on mobile */
-  .quick-view-box {
-    width: 100%;
-    max-width: 100%;
-    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-    max-height: 90dvh;
-  }
-}
-
-
-/* Fix: cart footer needs padding */
-.cart-footer {
-  padding: 16px 20px;
-  border-top: 1px solid var(--glass-border);
-  background: transparent;
-  flex-shrink: 0;
-}
-
-/* Fix: notification overlapping bottom nav on mobile */
-@media (max-width: 768px) {
-  .notification {
-    bottom: calc(72px + var(--safe-bottom)) !important;
-  }
-}
-
-/* Smooth scroll container */
-@media (max-width: 768px) {
-  .categories, .trust-strip {
-    scroll-snap-type: x mandatory;
-  }
-  .category-link, .trust-item {
-    scroll-snap-align: start;
-  }
-}
-
-/* Larger tap targets on mobile for all interactive elements */
-@media (hover: none) and (pointer: coarse) {
-  .hero-nav {
-    width: 44px;
-    height: 44px;
-    min-width: 44px;
-    min-height: 44px;
-  }
-  .size-btn { min-height: 44px; min-width: 44px; padding: 8px 14px; }
-  .qty-btn { min-width: 40px; min-height: 40px; }
-  .hero-dot { min-width: 16px; min-height: 16px; width: 16px; height: 16px; }
-  .hero-dot.active { width: 36px; }
-}
-
-/* Fix product card overflow issue causing horizontal scroll */
-.products {
-  width: 100%;
-  overflow: hidden;
-}
-
-@media (max-width: 360px) {
-  .section { padding: 16px 10px; }
-  .products { gap: 6px; }
-}
-
-/* iOS rubber-band scroll fix for modals */
-.modal-box,
-.cart-drawer,
-.cart-items {
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain;
-}
-
-/* Fix: app banner responsive */
-@media (max-width: 480px) {
-  .app-banner { padding: 32px 16px; }
-  .app-banner-text .app-banner-title { font-size: 18px; }
-  .app-banner-text p { font-size: 13px; }
-}
-
-/* ── Smooth reveal animation for sections ── */
-.reveal-on-scroll {
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}
-
-.reveal-on-scroll.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* ── Enhanced search bar with glow focus ── */
-.search-bar:focus-within {
-  border-color: var(--blue);
-  box-shadow: 0 0 0 4px rgba(29,78,216,0.14), 0 4px 16px rgba(29,78,216,0.12);
-  transform: none;
-}
-
-/* ── Animated background texture ── */
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cpath d='M0 0h60v60H0z' fill='none'/%3E%3Ccircle cx='30' cy='30' r='1' fill='rgba(99,170,255,0.04)'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.6;
-}
-
-/* ── Cart item quantity badge on product card ── */
-.in-cart-qty-badge {
-  position: absolute;
-  bottom: 8px;
-  left: 8px;
-  background: var(--blue);
-  color: white;
-  font-size: 11px;
-  font-weight: 700;
-  padding: 3px 8px;
-  border-radius: 20px;
-  z-index: 2;
-  box-shadow: 0 2px 6px rgba(29,78,216,0.4);
-}
-
-/* ── Toast notification improvement ── */
-.notification {
-  border-left: 4px solid transparent;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.notification.success { border-left-color: #4ade80; }
-.notification.error   { border-left-color: #f87171; }
-.notification.info    { border-left-color: #93c5fd; }
-
-/* ── Pulse animation for whatsapp button ── */
-.whatsapp-btn::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: #25d366;
-  animation: whatsapp-pulse 2s ease-out infinite;
-  z-index: -1;
-}
-
-@keyframes whatsapp-pulse {
-  0%   { transform: scale(1); opacity: 0.7; }
-  100% { transform: scale(2); opacity: 0; }
-}
-
-/* ── "Swipe to dismiss" instruction on mobile cart ── */
-.swipe-hint {
-  text-align: center;
-  font-size: 12px;
-  color: var(--muted);
-  padding: 8px 0 4px;
-  display: none;
-}
-
-@media (hover: none) {
-  .swipe-hint { display: block; }
-}
-
-/* ── Price filter pill ── */
-.sort-bar {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-/* Fix footer columns on small tablet */
-@media (min-width: 481px) and (max-width: 768px) {
-  .footer-inner { grid-template-columns: 1fr 1fr; gap: 20px; }
-}
-
-/* ── Hero content animation on slide change ── */
-@keyframes slideContentIn {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-.hero-slide.active .hero-content {
-  animation: slideContentIn 0.7s cubic-bezier(0.22,1,0.36,1) both;
-}
-
-/* ── Loading dots for async actions ── */
-.loading-dots {
-  display: inline-flex;
-  gap: 4px;
-  align-items: center;
-}
-.loading-dots span {
-  width: 5px; height: 5px;
-  background: currentColor;
-  border-radius: 50%;
-  animation: dot-bounce 1.2s ease infinite;
-}
-.loading-dots span:nth-child(2) { animation-delay: 0.2s; }
-.loading-dots span:nth-child(3) { animation-delay: 0.4s; }
-@keyframes dot-bounce {
-  0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
-  40%            { transform: scale(1);   opacity: 1; }
-}
-
-/* ── Enhanced scrollbar (desktop) ── */
-@media (min-width: 769px) {
-  ::-webkit-scrollbar { width: 8px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb {
-    background: var(--border);
-    border-radius: 10px;
-    border: 2px solid transparent;
-    background-clip: padding-box;
-  }
-  ::-webkit-scrollbar-thumb:hover { background: var(--muted); background-clip: padding-box; }
-}
-
-/* ── Category icons in nav ── */
-.category-icon {
-  font-size: 15px;
-  margin-right: 4px;
-}
-
-/* ── Promo banner countdown timer ── */
-.hero-countdown {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(0,0,0,0.3);
-  backdrop-filter: blur(6px);
-  border: 1px solid rgba(255,255,255,0.25);
-  border-radius: 8px;
-  padding: 6px 14px;
-  margin-top: 12px;
-  font-size: 13px;
-  font-weight: 700;
-  color: white;
-  letter-spacing: 0.04em;
-}
-
-.hero-countdown-label {
-  opacity: 0.75;
-  font-weight: 500;
-  font-size: 11px;
-  margin-right: 2px;
-}
-
-.hero-countdown-segment {
-  background: rgba(255,255,255,0.15);
-  border-radius: 4px;
-  padding: 2px 7px;
-  font-variant-numeric: tabular-nums;
-  min-width: 30px;
-  text-align: center;
-}
-
-.hero-countdown-sep {
-  opacity: 0.6;
-  margin: 0 1px;
-}
-
-/* Mobile fix: countdown on small screens */
-@media (max-width: 480px) {
-  .hero-countdown { font-size: 11px; padding: 5px 10px; gap: 4px; }
-  .hero-countdown-segment { min-width: 26px; padding: 2px 5px; }
-}
-
-/* ── "Free shipping" progress bar on cart ── */
-.shipping-progress-wrap {
-  margin: 12px 20px 4px;
-  flex-shrink: 0;
-}
-
-.shipping-progress-label {
-  font-size: 13px;
-  color: var(--mid);
-  margin-bottom: 6px;
-  font-weight: 500;
-}
-
-.shipping-progress-label strong { color: var(--green); }
-
-.shipping-progress-bar {
-  height: 6px;
-  background: var(--border);
-  border-radius: 6px;
-  overflow: hidden;
-}
-
-.shipping-progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--blue), var(--green));
-  border-radius: 6px;
-  transition: width 0.5s cubic-bezier(0.34,1.56,0.64,1);
-}
-
