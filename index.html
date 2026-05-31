@@ -172,11 +172,14 @@
           <div class="logo-sub">TEXTILES</div>
         </div>
       </div>
-      <div class="search-bar">
+      <div class="search-bar-wrap"><div class="search-bar">
         <span class="search-icon">🔍</span>
         <input type="text" placeholder="Search shirts, kurtis, sarees, bedsheets…" autocomplete="off" spellcheck="false" id="searchInput">
         <button class="search-clear" id="searchClear" onclick="clearSearch()">✕</button>
+        <button class="search-voice-btn" id="voiceSearchBtn" title="Voice Search" onclick="startVoiceSearch()">🎤</button>
       </div>
+      <div class="search-suggestions" id="searchSuggestions" style="display:none;"></div>
+    </div>
 
       <div class="header-actions">
         <button class="theme-toggle" id="themeToggle" title="Toggle Dark/Light Mode" onclick="toggleTheme()">🌙</button>
@@ -215,6 +218,14 @@
             <button class="btn-primary" onclick="scrollToProducts()">Shop Now</button>
             <button class="btn-secondary" onclick="filterCategory('Women')">Women's Collection</button>
           </div>
+          <div class="hero-countdown" id="heroCountdown">
+            <span class="hero-countdown-label">Sale ends in:</span>
+            <span class="hero-countdown-segment" id="cdHours">00</span>
+            <span class="hero-countdown-sep">:</span>
+            <span class="hero-countdown-segment" id="cdMins">00</span>
+            <span class="hero-countdown-sep">:</span>
+            <span class="hero-countdown-segment" id="cdSecs">00</span>
+          </div>
         </div>
       </div>
       <div class="hero-slide" style="background-image: linear-gradient(135deg, rgba(15,23,42,0.75) 0%, rgba(124,45,18,0.6) 100%), url('Main_background.jpg')">
@@ -249,7 +260,7 @@
 
 
   <!-- Trust Badges -->
-  <div class="trust-strip">
+  <div class="trust-strip reveal-on-scroll">
     <div class="trust-item"><span>✅</span> 100% Original Products</div>
     <div class="trust-item"><span>🔄</span> Easy 7-Day Returns</div>
     <div class="trust-item"><span>🔒</span> Secure Payments</div>
@@ -257,7 +268,7 @@
   </div>
 
   <!-- Products Section -->
-  <section class="section" id="productsSection">
+  <section class="section reveal-on-scroll" id="productsSection">
     <div class="section-header">
       <h2 class="section-title" id="sectionTitle">Men's Collection</h2>
       <div class="sort-bar">
@@ -269,6 +280,7 @@
         </select>
       </div>
     </div>
+    <div class="products-loading-bar" id="productsLoadingBar"></div>
     <div class="products" id="products"></div>
     <div class="no-results" id="noResults" style="display:none">
       <div class="no-results-icon">🔍</div>
@@ -330,6 +342,10 @@
       </div>
       <div id="cart-items" class="cart-items"></div>
       <div class="cart-footer">
+        <div class="shipping-progress-wrap" id="shippingProgressWrap">
+          <div class="shipping-progress-label" id="shippingProgressLabel">Add <strong id="shippingAmountNeeded">₹999</strong> more for free shipping! 🚚</div>
+          <div class="shipping-progress-bar"><div class="shipping-progress-fill" id="shippingProgressFill" style="width:0%"></div></div>
+        </div>
         <div class="cart-summary">
           <div class="summary-row"><span>Subtotal</span><span>₹<span id="cart-subtotal">0</span></span></div>
           <div class="summary-row"><span>Shipping</span><span id="shipping-text">FREE</span></div>
@@ -412,7 +428,7 @@
   </div>
 
   <!-- Download App Banner -->
-  <section class="app-banner">
+  <section class="app-banner reveal-on-scroll">
     <div class="app-banner-inner">
       <div class="app-banner-text">
         <div class="app-banner-badge">🤖 Now Available</div>
@@ -464,9 +480,9 @@
       </div>
       <div class="footer-contact">
         <h4>Contact</h4>
-        <p>📍 Srikakulam, Andhra Pradesh</p>
-        <p>📧 vikashmathsa1999@gmail.com</p>
-        <p>📞 +91 8919648679</p>
+        <p class="footer-contact-item"><span class="footer-contact-icon">📍</span><span>Srikakulam, Andhra Pradesh</span></p>
+        <p class="footer-contact-item"><span class="footer-contact-icon">📧</span><a href="mailto:vikashmathsa1999@gmail.com" style="color:inherit;text-decoration:none;word-break:break-all;">vikashmathsa1999@gmail.com</a></p>
+        <p class="footer-contact-item"><span class="footer-contact-icon">📞</span><a href="tel:+918919648679" style="color:inherit;text-decoration:none;">+91 8919648679</a></p>
       </div>
     </div>
     <div class="footer-bottom">
@@ -503,8 +519,16 @@
 
   <!-- WhatsApp Float -->
   <a href="https://wa.me/918919648679?text=Hi%2C%20I%27m%20interested%20in%20your%20products!" class="whatsapp-btn" target="_blank" rel="noopener noreferrer" title="Chat on WhatsApp">💬</a>
-<div class="top-bar">
+  <div class="top-bar">
     <div class="top-bar-inner">
+      <span>🚚 Free Shipping on Orders Above ₹999</span>
+      <span aria-hidden="true">·</span>
+      <span>💳 COD Available</span>
+      <span aria-hidden="true">·</span>
+      <span>⚡ Fast Delivery Across AP &amp; Telangana</span>
+      <span aria-hidden="true">·</span>
+      <span>↩ 7-Day Easy Returns</span>
+    
       <span>🚚 Free Shipping on Orders Above ₹999</span>
       <span aria-hidden="true">·</span>
       <span>💳 COD Available</span>
