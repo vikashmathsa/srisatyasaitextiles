@@ -27,41 +27,100 @@ let currentDailySubCat = '';
 // =======================
 // Firestore Product Loader
 // =======================
-const PRODUCT_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+const PRODUCT_CACHE_TTL = 10 * 60 * 1000; // 10 minutes
+const PRODUCT_CACHE_KEY = 'sstProductsCache';
 let _productCacheTime = 0;
+
+function _loadCachedProducts() {
+  try {
+    const raw = localStorage.getItem(PRODUCT_CACHE_KEY);
+    if (!raw) return false;
+    const { ts, data } = JSON.parse(raw);
+    if (Date.now() - ts > PRODUCT_CACHE_TTL) return false;
+    liveProducts = data;
+    _productCacheTime = ts;
+    return true;
+  } catch { return false; }
+}
+
+function _saveCachedProducts() {
+  try {
+    localStorage.setItem(PRODUCT_CACHE_KEY, JSON.stringify({ ts: Date.now(), data: liveProducts }));
+  } catch {}
+}
+
+function _removeSkeleton() {
+  // Remove skeleton cards once real products are rendered
+  document.querySelectorAll('.skeleton-card').forEach(el => el.remove());
+}
 
 function loadLiveProducts(forceRefresh = false) {
   const now = Date.now();
+
+  // --- Instant render from localStorage cache ---
+  if (!forceRefresh && _loadCachedProducts()) {
+    _removeSkeleton();
+    renderCategories();
+    renderProducts();
+    updateCategoryCards();
+    _restoreWishlist();
+    updateWishlistUI();
+    updateCartCount();
+    // Still refresh from Firestore in background if cache is older than 2 min
+    if (now - _productCacheTime > 2 * 60 * 1000) {
+      _fetchFromFirestore(false); // silent background refresh
+    }
+    return;
+  }
+
+  // --- In-memory cache still fresh ---
   if (!forceRefresh && liveProducts.length > 0 && (now - _productCacheTime) < PRODUCT_CACHE_TTL) {
-    // Cache still fresh — just re-render
+    _removeSkeleton();
     renderCategories();
     renderProducts();
     updateCategoryCards();
     return;
   }
+
+  // --- Fetch from Firestore ---
+  _fetchFromFirestore(true);
+}
+
+function _fetchFromFirestore(updateUI) {
   const db = firebase.firestore();
   db.collection('products').get().then(snap => {
     liveProducts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
     _productCacheTime = Date.now();
-    // Restore full wishlist objects from saved IDs
-    try {
-      const savedIds = JSON.parse(localStorage.getItem('sstWishlistIds')) || [];
-      if (savedIds.length && wishlist.length === savedIds.length) {
-        wishlist = savedIds
-          .map(id => liveProducts.find(p => p.id === id))
-          .filter(Boolean);
-      }
-    } catch {}
-    renderCategories();
-    renderProducts();
-    updateCategoryCards();
-    updateWishlistUI();
-    updateCartCount();
+    _saveCachedProducts();
+    _restoreWishlist();
+    if (updateUI) {
+      _removeSkeleton();
+      renderCategories();
+      renderProducts();
+      updateCategoryCards();
+      updateWishlistUI();
+      updateCartCount();
+    } else {
+      // Silent refresh — update data but only re-render if user hasn't interacted
+      _removeSkeleton();
+      renderProducts();
+      updateCategoryCards();
+    }
   }).catch(err => {
     console.warn('Firestore load failed:', err);
+    _removeSkeleton();
     renderCategories();
     renderProducts();
   });
+}
+
+function _restoreWishlist() {
+  try {
+    const savedIds = JSON.parse(localStorage.getItem('sstWishlistIds')) || [];
+    if (savedIds.length) {
+      wishlist = savedIds.map(id => liveProducts.find(p => p.id === id)).filter(Boolean);
+    }
+  } catch {}
 }
 
 // =======================
@@ -449,6 +508,11 @@ function renderProducts(filteredProducts = null) {
   _productsFirstLoad = false;
 
   const frag = document.createDocumentFragment();
+  // Use IntersectionObserver for card animations — much cheaper than CSS delay on all cards
+  const cardObserver = ('IntersectionObserver' in window) ? new IntersectionObserver((entries, obs) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('animate-in'); obs.unobserve(e.target); } });
+  }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' }) : null;
+
   list.forEach((product, i) => {
     const discount = Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100);
     const savings = product.oldPrice - product.price;
@@ -457,8 +521,9 @@ function renderProducts(filteredProducts = null) {
     const productIdAttr = typeof product.id === 'string' ? `'${product.id}'` : product.id;
 
     const card = document.createElement('div');
-    card.className = 'product-card' + (animate ? ' animate-in' : '');
-    if (animate) card.style.animationDelay = `${i * 0.02}s`;
+    card.className = 'product-card'; // animate-in added by IntersectionObserver
+    if (animate && cardObserver) { cardObserver.observe(card); }
+    else if (animate) { card.classList.add('animate-in'); }
     card.innerHTML = `
       <div class="product-img-wrap">
         <img src="${product.img}" alt="${product.name}" loading="lazy" decoding="async">
@@ -643,10 +708,13 @@ function updateProductCardUI(productId) {
 function updateCartCount() {
   const total = cart.reduce((sum, item) => sum + item.quantity, 0);
   document.getElementById('cart-count').textContent = total;
-  // Sync mobile bottom nav badge
   const mobBadge = document.getElementById('mob-cart-count');
   if (mobBadge) mobBadge.textContent = total;
-  try { localStorage.setItem('sstCart', JSON.stringify(cart)); } catch {}
+  // Debounce localStorage write to avoid blocking on rapid quantity changes
+  clearTimeout(updateCartCount._saveTimer);
+  updateCartCount._saveTimer = setTimeout(() => {
+    try { localStorage.setItem('sstCart', JSON.stringify(cart)); } catch {}
+  }, 300);
 }
 
 function openCart() {

@@ -45,13 +45,13 @@
   --radius-lg: 20px;
   --font-display: 'Playfair Display', Georgia, serif;
   --font-body: 'DM Sans', system-ui, sans-serif;
-  --transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
+  --transition: color 0.18s ease, background-color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease, transform 0.18s ease;
 
   --glass-bg:        rgba(255, 255, 255, 0.75);
   --glass-bg-strong: rgba(255, 255, 255, 0.92);
   --glass-border:    rgba(255, 255, 255, 0.7);
   --glass-shadow:    0 8px 32px rgba(15, 23, 42, 0.12);
-  --glass-blur:      blur(8px);
+  --glass-blur:      blur(6px);
   --glass-blur-sm:   blur(4px);
   --body-bg-light:   linear-gradient(135deg, #dbeafe 0%, #f0f9ff 35%, #e0f2fe 65%, #ede9fe 100%);
 
@@ -130,7 +130,8 @@ body::before {
   pointer-events: none;
   z-index: 0;
   transition: opacity 0.6s ease;
-  will-change: opacity;
+  /* GPU-composited layer — avoids repaints on scroll */
+  transform: translateZ(0);
 }
 
 body.dark-mode::before {
@@ -199,8 +200,8 @@ body > * { position: relative; z-index: 1; }
 }
 
 @keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+  0% { transform: translate3d(-100%, 0, 0); }
+  100% { transform: translate3d(100%, 0, 0); }
 }
 
 .top-bar-inner {
@@ -2762,4 +2763,83 @@ body.dark-mode .product-card::after {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+}
+
+/* ================================
+   SKELETON LOADERS
+   Shown while Firestore products load
+================================ */
+@keyframes skeletonPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+
+.skeleton-card {
+  background: var(--glass-bg);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--glass-border);
+  animation: skeletonPulse 1.6s ease-in-out infinite;
+}
+
+.sk-img {
+  width: 100%;
+  height: 260px;
+  background: linear-gradient(135deg, var(--border) 25%, var(--bg) 50%, var(--border) 75%);
+  background-size: 200% 100%;
+  animation: skeletonShimmer 1.8s ease infinite;
+}
+
+@keyframes skeletonShimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.sk-line {
+  margin: 12px 16px;
+  border-radius: 6px;
+  background: var(--border);
+}
+
+.sk-title  { height: 14px; width: 80%; }
+.sk-price  { height: 20px; width: 50%; margin-top: 8px; }
+.sk-btn    { height: 40px; width: calc(100% - 32px); margin-top: 10px; margin-bottom: 16px; border-radius: 10px; }
+
+@media (max-width: 480px) {
+  .sk-img { height: 160px; }
+}
+
+/* ================================
+   MOBILE PERFORMANCE: disable expensive GPU ops on low-end devices
+================================ */
+@media (max-width: 768px) {
+  /* backdrop-filter is very expensive on mid-range Android — disable on mobile */
+  .product-card,
+  .trust-strip,
+  .modal-overlay {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  /* Disable body ambient glow on mobile — expensive radial gradients */
+  body::before { display: none; }
+  /* Disable product card shimmer overlay on mobile */
+  .product-card::after { display: none; }
+  /* Reduce glass blur on header/cart for performance */
+  header {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  .cart-drawer, .mobile-bottom-nav {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+}
+
+/* For very low-end devices or users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+  .skeleton-card, .sk-img { animation: none; opacity: 0.6; }
 }
