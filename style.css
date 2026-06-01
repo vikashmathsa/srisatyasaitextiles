@@ -1723,7 +1723,7 @@ body.dark-mode .footer-logo { color: #f1f5f9; }
   margin-bottom: 16px;
 }
 
-.footer-socials { display: flex; gap: 12px; flex-wrap: wrap; }
+.footer-socials { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-top: 16px; }
 
 .footer-socials span {
   font-size: 22px;
@@ -1736,9 +1736,8 @@ body.dark-mode .footer-logo { color: #f1f5f9; }
   align-items: center;
   justify-content: center;
   border: 1px solid rgba(255,255,255,0.1);
-  /* Touch target */
-  min-width: 44px;
-  min-height: 44px;
+  min-width: 40px;
+  min-height: 40px;
 }
 
 .footer-socials span:hover {
@@ -2286,7 +2285,7 @@ body.dark-mode .product-card::after {
    ABOUT ADMIN BUTTON
 ================================ */
 .about-admin-btn {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 7px;
   background: linear-gradient(135deg, #f0b429, #c8932a);
@@ -2303,14 +2302,19 @@ body.dark-mode .product-card::after {
   transition: opacity 0.2s, transform 0.15s;
   white-space: nowrap;
   min-height: 36px;
+  max-width: fit-content;
 }
 
 .about-admin-btn:hover { opacity: 0.88; transform: translateY(-1px); }
 
 .about-admin-btn .admin-avatar {
-  width: 22px; height: 22px; border-radius: 50%;
-  object-fit: cover; border: 1.5px solid rgba(15,23,42,0.25);
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid rgba(15,23,42,0.25);
   flex-shrink: 0;
+  display: block;
 }
 
 .footer-about-link {
@@ -2331,6 +2335,27 @@ body.dark-mode .product-card::after {
 }
 
 .footer-about-link:hover { background: rgba(240,180,41,0.18); }
+
+/* Footer social icon buttons */
+.footer-social-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  font-size: 18px;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.15s;
+  flex-shrink: 0;
+}
+
+.footer-social-btn:hover {
+  background: rgba(255,255,255,0.15);
+  transform: translateY(-2px);
+}
 
 /* ================================
    MOBILE BOTTOM NAV BAR

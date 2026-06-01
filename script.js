@@ -305,7 +305,7 @@ function renderCategories() {
     link.className = `category-link ${cat === currentCategory ? 'active' : ''}`;
 
     if (cat === 'Daily Wear') {
-      link.textContent = '👕 Daily Wear';
+      link.textContent = 'Daily Wear';
       link.className += ' daily-wear-link';
     } else {
       link.textContent = cat + "'s";
