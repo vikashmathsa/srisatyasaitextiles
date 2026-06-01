@@ -45,13 +45,13 @@
   --radius-lg: 20px;
   --font-display: 'Playfair Display', Georgia, serif;
   --font-body: 'DM Sans', system-ui, sans-serif;
-  --transition: color 0.18s ease, background-color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease, transform 0.18s ease;
+  --transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
 
   --glass-bg:        rgba(255, 255, 255, 0.75);
   --glass-bg-strong: rgba(255, 255, 255, 0.92);
   --glass-border:    rgba(255, 255, 255, 0.7);
   --glass-shadow:    0 8px 32px rgba(15, 23, 42, 0.12);
-  --glass-blur:      blur(6px);
+  --glass-blur:      blur(8px);
   --glass-blur-sm:   blur(4px);
   --body-bg-light:   linear-gradient(135deg, #dbeafe 0%, #f0f9ff 35%, #e0f2fe 65%, #ede9fe 100%);
 
@@ -130,8 +130,7 @@ body::before {
   pointer-events: none;
   z-index: 0;
   transition: opacity 0.6s ease;
-  /* GPU-composited layer — avoids repaints on scroll */
-  transform: translateZ(0);
+  will-change: opacity;
 }
 
 body.dark-mode::before {
@@ -200,8 +199,8 @@ body > * { position: relative; z-index: 1; }
 }
 
 @keyframes shimmer {
-  0% { transform: translate3d(-100%, 0, 0); }
-  100% { transform: translate3d(100%, 0, 0); }
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
 }
 
 .top-bar-inner {
@@ -500,7 +499,7 @@ header {
 .hero-content {
   text-align: center;
   color: white;
-  padding: 0 20px;
+  padding: 0 16px;
   animation: heroFadeUp 1s cubic-bezier(0.22,1,0.36,1) both;
   max-width: 700px;
   width: 100%;
@@ -520,7 +519,7 @@ header {
   border-radius: 50px;
   font-size: 13px;
   font-weight: 700;
-  margin-bottom: 22px;
+  margin-bottom: 14px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   box-shadow: 0 4px 20px rgba(0,0,0,0.25);
@@ -528,9 +527,9 @@ header {
 
 .hero-content h1 {
   font-family: var(--font-display);
-  font-size: clamp(32px, 6vw, 68px);
+  font-size: clamp(26px, 5.5vw, 64px);
   line-height: 1.08;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   text-shadow: 0 3px 24px rgba(0,0,0,0.35);
   letter-spacing: -0.02em;
 }
@@ -542,8 +541,8 @@ header {
 }
 
 .hero-content p {
-  font-size: clamp(15px, 2.5vw, 22px);
-  margin-bottom: 32px;
+  font-size: clamp(13px, 2vw, 20px);
+  margin-bottom: 22px;
   opacity: 0.92;
 }
 
@@ -2095,9 +2094,9 @@ body.dark-mode .product-card::after {
   .subnav-link { padding: 5px 12px; font-size: 12px; }
 
   /* ── Hero ── */
-  .hero { height: 420px; }
-  .hero-content h1 { font-size: 32px; }
-  .hero-content p { font-size: 15px; margin-bottom: 24px; }
+  .hero { height: 320px; }
+  .hero-content h1 { font-size: 25px; }
+  .hero-content p { font-size: 13px; margin-bottom: 14px; }
   .hero-nav { width: 40px; height: 40px; font-size: 20px; }
   .hero-nav.prev { left: 12px; }
   .hero-nav.next { right: 12px; }
@@ -2173,17 +2172,16 @@ body.dark-mode .product-card::after {
   .search-bar { padding: 0 12px; }
 
   /* ── Hero ── */
-  .hero { height: 340px; }
-  .hero-btns { flex-direction: column; align-items: center; gap: 10px; }
+  .hero { height: 260px; }
+  .hero-btns { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 8px; }
   .btn-primary, .btn-secondary {
-    width: 100%;
-    max-width: 260px;
-    padding: 13px 28px;
-    font-size: 15px;
+    padding: 9px 18px;
+    font-size: 13px;
+    min-height: 38px;
   }
-  .hero-badge { font-size: 11px; padding: 6px 14px; }
-  .hero-content h1 { font-size: 26px; }
-  .hero-content p { font-size: 14px; margin-bottom: 20px; }
+  .hero-badge { font-size: 10px; padding: 5px 12px; margin-bottom: 8px; }
+  .hero-content h1 { font-size: 21px; margin-bottom: 6px; }
+  .hero-content p { font-size: 12px; margin-bottom: 12px; }
   .hero-nav { width: 36px; height: 36px; font-size: 18px; }
 
   /* ── Trust strip — horizontal scroll on tiny screens ── */
@@ -2274,12 +2272,12 @@ body.dark-mode .product-card::after {
    LANDSCAPE MOBILE — height constraint
 ================================ */
 @media (max-width: 768px) and (orientation: landscape) {
-  .hero { height: 260px; }
-  .hero-content h1 { font-size: 26px; }
-  .hero-content p { font-size: 13px; margin-bottom: 14px; }
-  .hero-badge { margin-bottom: 12px; }
+  .hero { height: 200px; }
+  .hero-content h1 { font-size: 19px; }
+  .hero-content p { font-size: 12px; margin-bottom: 10px; }
+  .hero-badge { margin-bottom: 8px; font-size: 10px; padding: 4px 10px; }
   .hero-btns { gap: 8px; }
-  .btn-primary, .btn-secondary { padding: 10px 24px; font-size: 14px; min-height: 42px; }
+  .btn-primary, .btn-secondary { padding: 8px 16px; font-size: 12px; min-height: 34px; }
 }
 
 /* ================================
@@ -2763,83 +2761,4 @@ body.dark-mode .product-card::after {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-}
-
-/* ================================
-   SKELETON LOADERS
-   Shown while Firestore products load
-================================ */
-@keyframes skeletonPulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.45; }
-}
-
-.skeleton-card {
-  background: var(--glass-bg);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  border: 1px solid var(--glass-border);
-  animation: skeletonPulse 1.6s ease-in-out infinite;
-}
-
-.sk-img {
-  width: 100%;
-  height: 260px;
-  background: linear-gradient(135deg, var(--border) 25%, var(--bg) 50%, var(--border) 75%);
-  background-size: 200% 100%;
-  animation: skeletonShimmer 1.8s ease infinite;
-}
-
-@keyframes skeletonShimmer {
-  0%   { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
-}
-
-.sk-line {
-  margin: 12px 16px;
-  border-radius: 6px;
-  background: var(--border);
-}
-
-.sk-title  { height: 14px; width: 80%; }
-.sk-price  { height: 20px; width: 50%; margin-top: 8px; }
-.sk-btn    { height: 40px; width: calc(100% - 32px); margin-top: 10px; margin-bottom: 16px; border-radius: 10px; }
-
-@media (max-width: 480px) {
-  .sk-img { height: 160px; }
-}
-
-/* ================================
-   MOBILE PERFORMANCE: disable expensive GPU ops on low-end devices
-================================ */
-@media (max-width: 768px) {
-  /* backdrop-filter is very expensive on mid-range Android — disable on mobile */
-  .product-card,
-  .trust-strip,
-  .modal-overlay {
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-  }
-  /* Disable body ambient glow on mobile — expensive radial gradients */
-  body::before { display: none; }
-  /* Disable product card shimmer overlay on mobile */
-  .product-card::after { display: none; }
-  /* Reduce glass blur on header/cart for performance */
-  header {
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-  }
-  .cart-drawer, .mobile-bottom-nav {
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-  }
-}
-
-/* For very low-end devices or users who prefer reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-  }
-  .skeleton-card, .sk-img { animation: none; opacity: 0.6; }
 }
