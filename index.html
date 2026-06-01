@@ -417,26 +417,7 @@ function toggleTheme() {
 })();
 </script>
 <script>
-// =======================
-// App Download Banner
-// =======================
-function showAppBanner() {
-  var banner = document.getElementById('appDownloadBanner');
-  var dismissed = sessionStorage.getItem('appBannerDismissed');
-  if (banner && !dismissed) {
-    setTimeout(function(){ banner.classList.add('visible'); }, 4000);
-  }
-}
-function dismissAppBanner() {
-  var banner = document.getElementById('appDownloadBanner');
-  if (banner) banner.classList.remove('visible');
-  sessionStorage.setItem('appBannerDismissed', '1');
-}
-function showAppComingSoon(e) {
-  if (e) e.preventDefault();
-  dismissAppBanner();
-  openModal('appModal');
-}
+	
 function closeAppModal() { closeModal('appModal'); }
 window.addEventListener('load', showAppBanner);
 </script>
