@@ -1701,7 +1701,7 @@ footer {
 
 .footer-inner {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1.5fr;
+  grid-template-columns: 2fr 1fr 1.5fr 1.5fr;
   gap: 40px;
   padding: 54px 5% 40px;
   max-width: 1400px;
@@ -2477,4 +2477,289 @@ body.dark-mode .product-card::after {
 @media (max-width: 480px) {
   .search-bar { border-radius: 12px; }
   .search-bar input::placeholder { font-size: 14px; }
+}
+
+/* ================================
+   DOWNLOAD APP — FOOTER SECTION
+================================ */
+.footer-app h4 {
+  color: #f1f5f9;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.footer-app p {
+  font-size: 13px;
+  line-height: 1.6;
+  margin-bottom: 14px;
+  color: var(--footer-text);
+}
+
+.app-store-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 10px;
+  padding: 10px 14px;
+  text-decoration: none;
+  color: white;
+  transition: background 0.2s, transform 0.15s;
+  margin-bottom: 8px;
+  cursor: pointer;
+  min-height: 48px;
+}
+
+.app-store-btn:hover {
+  background: rgba(255,255,255,0.14);
+  transform: translateY(-2px);
+  border-color: rgba(255,255,255,0.22);
+}
+
+.app-store-icon {
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.app-store-label {
+  font-size: 10px;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.2;
+}
+
+.app-store-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: white;
+  line-height: 1.2;
+}
+
+.app-qr-hint {
+  font-size: 11px;
+  color: rgba(255,255,255,0.4);
+  margin-top: 4px;
+  text-align: center;
+}
+
+/* ================================
+   APP DOWNLOAD FLOATING BANNER
+================================ */
+.app-download-banner {
+  position: fixed;
+  bottom: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #1d4ed8, #1e3a8a);
+  color: white;
+  border-radius: 16px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 900;
+  box-shadow: 0 10px 40px rgba(29,78,216,0.45);
+  min-width: 320px;
+  max-width: calc(100vw - 32px);
+  transition: bottom 0.5s cubic-bezier(0.34,1.56,0.64,1);
+  border: 1px solid rgba(255,255,255,0.18);
+}
+
+.app-download-banner.visible {
+  bottom: calc(72px + var(--safe-bottom));
+}
+
+@media (max-width: 768px) {
+  .app-download-banner.visible {
+    bottom: calc(68px + var(--safe-bottom));
+  }
+}
+
+.app-banner-close {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.4);
+  border: 1px solid rgba(255,255,255,0.3);
+  color: white;
+  font-size: 11px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+  min-width: unset;
+  min-height: unset;
+}
+
+.app-banner-close:hover { background: rgba(0,0,0,0.7); }
+
+.app-banner-icon {
+  font-size: 30px;
+  flex-shrink: 0;
+}
+
+.app-banner-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.app-banner-text strong {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.app-banner-text span {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.app-banner-btn {
+  background: rgba(255,255,255,0.2);
+  border: 1.5px solid rgba(255,255,255,0.5);
+  color: white;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: 50px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s;
+  font-family: var(--font-body);
+  min-height: 36px;
+}
+
+.app-banner-btn:hover { background: rgba(255,255,255,0.32); }
+
+/* ================================
+   APP COMING SOON MODAL
+================================ */
+.app-modal-box {
+  max-width: 400px;
+  text-align: center;
+}
+
+.app-modal-icon {
+  font-size: 56px;
+  margin-bottom: 8px;
+}
+
+.app-platforms {
+  display: flex;
+  gap: 12px;
+  margin: 20px 0 8px;
+}
+
+.app-platform-card {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 12px;
+}
+
+.app-platform-card span { font-size: 24px; flex-shrink: 0; }
+
+.platform-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--dark);
+}
+
+.platform-status {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--orange);
+  background: rgba(234,88,12,0.1);
+  padding: 2px 8px;
+  border-radius: 20px;
+  display: inline-block;
+  margin-top: 4px;
+}
+
+/* ================================
+   FOOTER RESPONSIVE UPDATE
+================================ */
+@media (max-width: 1024px) {
+  .footer-inner { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 768px) {
+  .footer-inner { grid-template-columns: 1fr 1fr; gap: 28px; padding: 32px 16px; }
+  .app-platforms { flex-direction: column; }
+}
+
+@media (max-width: 480px) {
+  .footer-inner { grid-template-columns: 1fr; gap: 24px; padding: 28px 16px; }
+}
+
+/* ================================
+   APP PERKS LIST
+================================ */
+.app-perks {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.app-perk {
+  font-size: 12px;
+  color: rgba(255,255,255,0.75);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.app-perks--modal .app-perk {
+  font-size: 14px;
+  color: var(--mid);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-weight: 500;
+}
+
+/* Highlight the real download button */
+.app-store-btn--android {
+  background: linear-gradient(135deg, rgba(29,78,216,0.25), rgba(30,58,138,0.2));
+  border-color: rgba(99,170,255,0.35);
+  position: relative;
+}
+
+.app-store-btn--android:hover {
+  background: linear-gradient(135deg, rgba(29,78,216,0.4), rgba(30,58,138,0.35));
+  border-color: rgba(99,170,255,0.6);
+}
+
+.app-store-badge {
+  background: var(--green);
+  color: white;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 20px;
+  letter-spacing: 0.05em;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* App banner link button */
+.app-download-banner a.app-banner-btn {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }

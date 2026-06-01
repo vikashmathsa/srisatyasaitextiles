@@ -293,14 +293,6 @@
         </div>
       </div>
       <div class="footer-links">
-        <h4>Quick Links</h4>
-        <a onclick="filterCategory('Men')">Men's Collection</a>
-        <a onclick="filterCategory('Women')">Women's Collection</a>
-        <a onclick="filterCategory('Kids')">Kids Collection</a>
-        <a onclick="filterCategory('Home')">Home Textiles</a>
-        <a onclick="filterCategory('Daily Wear')">Daily Wear</a>
-      </div>
-      <div class="footer-links">
         <h4>Support</h4>
         <a href="contact.html">Contact Us</a>
         <a href="contact.html">Shipping Policy</a>
@@ -312,6 +304,23 @@
         <p>📍 Srikakulam, Andhra Pradesh</p>
         <p>📧 vikashmathsa1999@gmail.com</p>
         <p>📞 +91 8919648679</p>
+      </div>
+      <div class="footer-app">
+        <h4>Download Our App</h4>
+        <p>🎁 Get <strong style="color:#f0b429">exclusive offers &amp; bigger discounts</strong> only on our app. Install now and never miss a deal!</p>
+        <a href="https://drive.usercontent.google.com/u/0/uc?id=1Wbb8LVEkapVUHP7K9BL89DAnMdM6kWo6&amp;export=download" class="app-store-btn app-store-btn--android" target="_blank" rel="noopener noreferrer" title="Download APK">
+          <span class="app-store-icon">📲</span>
+          <div>
+            <div class="app-store-label">Download APK</div>
+            <div class="app-store-name">Install Our App</div>
+          </div>
+          <span class="app-store-badge">FREE</span>
+        </a>
+        <div class="app-perks">
+          <div class="app-perk">🏷️ App-only discounts</div>
+          <div class="app-perk">🔔 Instant deal alerts</div>
+          <div class="app-perk">📦 Easy order tracking</div>
+        </div>
       </div>
     </div>
     <div class="footer-bottom">
@@ -358,6 +367,37 @@
   <!-- Scroll to Top -->
   <button class="scroll-top-btn" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">↑</button>
 
+  <!-- App Download Floating Banner -->
+  <div class="app-download-banner" id="appDownloadBanner">
+    <button class="app-banner-close" onclick="dismissAppBanner()" aria-label="Close">✕</button>
+    <div class="app-banner-icon">📱</div>
+    <div class="app-banner-text">
+      <strong>More Offers on Our App!</strong>
+      <span>Exclusive discounts — install free</span>
+    </div>
+    <a href="https://drive.usercontent.google.com/u/0/uc?id=1Wbb8LVEkapVUHP7K9BL89DAnMdM6kWo6&export=download" class="app-banner-btn" target="_blank" rel="noopener noreferrer" onclick="dismissAppBanner()">Install</a>
+  </div>
+
+  <!-- App Download Modal -->
+  <div class="modal-overlay" id="appModal" onclick="handleOverlayClick(event, 'appModal', closeAppModal)">
+    <div class="modal-box app-modal-box">
+      <button class="close-btn" onclick="closeAppModal()">✕</button>
+      <div class="app-modal-icon">📲</div>
+      <h2>Get More Offers!</h2>
+      <p class="modal-sub">Install our app for <strong>exclusive discounts</strong> and bigger deals not available on the website.</p>
+      <div class="app-perks app-perks--modal">
+        <div class="app-perk">🏷️ App-only discount codes</div>
+        <div class="app-perk">🔔 Instant sale &amp; restock alerts</div>
+        <div class="app-perk">📦 Real-time order tracking</div>
+        <div class="app-perk">⚡ Faster checkout</div>
+      </div>
+      <a href="https://drive.usercontent.google.com/u/0/uc?id=1Wbb8LVEkapVUHP7K9BL89DAnMdM6kWo6&export=download" class="btn-full" style="display:flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;margin-top:16px" target="_blank" rel="noopener noreferrer" onclick="closeAppModal()">
+        📲 Download App — It's FREE
+      </a>
+      <p style="font-size:12px;color:var(--muted);margin-top:10px;text-align:center">Android APK · Safe &amp; Secure</p>
+    </div>
+  </div>
+
   <!-- WhatsApp Float -->
   <a href="https://wa.me/918919648679?text=Hi%2C%20I%27m%20interested%20in%20your%20products!" class="whatsapp-btn" target="_blank" rel="noopener noreferrer" title="Chat on WhatsApp">💬</a>
 <script>
@@ -387,6 +427,30 @@ function toggleTheme() {
   const saved = localStorage.getItem('sstTheme');
   applyTheme(saved === 'light' ? false : true);
 })();
+</script>
+<script>
+// =======================
+// App Download Banner
+// =======================
+function showAppBanner() {
+  var banner = document.getElementById('appDownloadBanner');
+  var dismissed = sessionStorage.getItem('appBannerDismissed');
+  if (banner && !dismissed) {
+    setTimeout(function(){ banner.classList.add('visible'); }, 4000);
+  }
+}
+function dismissAppBanner() {
+  var banner = document.getElementById('appDownloadBanner');
+  if (banner) banner.classList.remove('visible');
+  sessionStorage.setItem('appBannerDismissed', '1');
+}
+function showAppComingSoon(e) {
+  if (e) e.preventDefault();
+  dismissAppBanner();
+  openModal('appModal');
+}
+function closeAppModal() { closeModal('appModal'); }
+window.addEventListener('load', showAppBanner);
 </script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js" defer></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js" defer></script>
